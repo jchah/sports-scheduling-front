@@ -1,43 +1,57 @@
 <template>
-  <div class="event-details">
-    <h2>{{ event.name }}</h2>
-    <p><strong>Date:</strong> {{ event.date }}</p>
-    <p><strong>Time:</strong> {{ event.time }}</p>
+  <div class="event-details" v-if="event">
+    <BackButton/>
+    <h2>{{ event.title }}</h2>
     <p><strong>Location:</strong> {{ event.location }}</p>
+    <p><strong>Description:</strong> {{event.description}}</p>
+    <p><strong>Date:</strong> {{ new Date(event.startTime).toLocaleDateString() }}</p>
+    <p><strong>Time:</strong> {{ new Date(event.startTime).toLocaleTimeString() }}</p>
     <div id="map" class="map-container"></div>
     <p><strong>Teams Involved:</strong> {{ event.teams.join(', ') }}</p>
-    <p><strong>Details:</strong> {{ event.details }}</p>
+    <p><strong>League:</strong> {{ event.league }}</p>
     <button @click="setReminder(event)">Set Reminder</button>
+  </div>
+  <div v-else>
+    Loading event details...
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import BackButton from '@/components/BackButton.vue';
+
 export default {
   name: 'EventDetails',
+  components: {
+    BackButton
+  },
   props: {
-    eventId: {
-      type: String,
-      required: true
-    }
+    id: String
   },
   data() {
     return {
       event: null
     };
   },
+  created() {
+    this.fetchEventDetails();
+  },
   methods: {
     fetchEventDetails() {
-      // Placeholder for an API call to fetch event details
-      // this.event = fetch(`/api/events/${this.eventId}`).then(response => response.json());
+      const eventId = this.id || this.$route.params.id;
+      axios.get(`https://sports-scheduling-yzsb.onrender.com/events/${eventId}`)
+          .then(response => {
+            this.event = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching event details:', error);
+          });
     },
     setReminder(event) {
-      // Placeholder for functionality to set a reminder for the event
-      alert(`Reminder set for ${event.name}!`);
+      alert(`Reminder set for ${event.title}!`);
     },
     initMap() {
       // Initialize Google Maps
-      // This would actually use the Google Maps API to render a map
-      // with the location of the event.
     }
   },
   mounted() {
@@ -51,14 +65,10 @@ export default {
 
 <style scoped>
 .event-details {
-  margin: auto;
-  width: 80%;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  /* ... */
 }
 
 .map-container {
-  height: 300px;
-  margin-top: 20px;
+  /* ... */
 }
 </style>

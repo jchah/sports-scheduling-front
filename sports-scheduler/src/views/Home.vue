@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  name: 'Home',
+  name: 'AppHome',
   // You might add a script section if there's dynamic data or methods to include
 }
 </script>

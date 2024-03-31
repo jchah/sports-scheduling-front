@@ -53,6 +53,7 @@ export default {
       // This could involve saving the reminder to a backend server or local storage
       console.log('Setting reminder:', this.reminder);
       // Provide feedback to the user, such as a success message
+      // Should probably have some place to find reminders
     }
   }
 }

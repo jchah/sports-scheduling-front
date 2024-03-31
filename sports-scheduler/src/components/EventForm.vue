@@ -1,87 +1,150 @@
 <template>
+  <BackButton/>
   <div class="event-form">
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
-        <label for="eventName">Event Name:</label>
-        <input type="text" id="eventName" v-model="event.name" required>
+        <label for="eventTitle">Event Title:</label>
+        <input type="text" id="eventTitle" v-model="event.title" required>
       </div>
       <div class="form-group">
-        <label for="eventDate">Date:</label>
-        <input type="date" id="eventDate" v-model="event.date" required>
+        <label for="eventDescription">Description:</label>
+        <textarea id="eventDescription" v-model="event.description" required></textarea>
       </div>
       <div class="form-group">
-        <label for="eventTime">Time:</label>
-        <input type="time" id="eventTime" v-model="event.time" required>
+        <label for="eventStartTime">Start Time:</label>
+        <input type="datetime-local" id="eventStartTime" v-model="event.startTime" required>
+      </div>
+      <div class="form-group">
+        <label for="eventEndTime">End Time:</label>
+        <input type="datetime-local" id="eventEndTime" v-model="event.endTime" required>
       </div>
       <div class="form-group">
         <label for="eventLocation">Location:</label>
         <input type="text" id="eventLocation" v-model="event.location" required>
       </div>
-      <!-- Include additional fields as necessary -->
-      <button type="submit">Submit</button>
+      <div class="form-group">
+        <label for="eventTeams">Teams (comma-separated):</label>
+        <input type="text" id="eventTeams" v-model="event.teams" required>
+      </div>
+      <div class="form-group">
+        <label for="eventLeague">League:</label>
+        <input type="text" id="eventLeague" v-model="event.league" required>
+      </div>
+      <button type="submit" class="btn btn-success">Add Event</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import BackButton from '@/components/BackButton.vue';
+
 export default {
   name: 'EventForm',
+  components: {BackButton},
   data() {
     return {
       formTitle: 'Add New Event',
       event: {
-        name: '',
-        date: '',
-        time: '',
-        location: ''
-        // Add more fields as per your requirements
+        title: '',
+        description: '',
+        startTime: '',
+        endTime: '',
+        location: '',
+        teams: '', // Need to split this into an array before submission
+        league: ''
       }
     };
   },
   methods: {
     submitForm() {
-      // Handle the form submission, possibly sending data to a backend server
-      // This can include form validation and POST/PUT request to the server
-      console.log('Event Data:', this.event);
-      // After submission, you may want to clear the form or provide feedback to the user
+      // Transform teams from comma-separated string to array
+      const eventData = {
+        ...this.event,
+        teams: this.event.teams.split(',').map(team => team.trim()) // Ensure teams are trimmed
+      };
+
+      axios.post('https://sports-scheduling-yzsb.onrender.com/events', eventData)
+          .then(response => {
+            // Handle success, such as showing a success message or redirecting
+            console.log('Event added successfully:', response.data);
+            this.clearForm();
+          })
+          .catch(error => {
+            // Handle error, such as showing an error message
+            console.error('Error adding event:', error);
+          });
+    },
+    clearForm() {
+      this.event = {
+        title: '',
+        description: '',
+        startTime: '',
+        endTime: '',
+        location: '',
+        teams: '', // If this is a comma-separated string in your form
+        league: ''
+      };
     }
-  },
-  props: {
-    // You can pass existing event data as a prop if this form is also used for editing
   }
 }
 </script>
 
-<style scoped>
+<style>
 .event-form {
   max-width: 500px;
-  margin: auto;
+  margin: 20px auto;
   padding: 20px;
   background: #f8f8f8;
   border-radius: 10px;
-}
-
-.form-group {
-  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Creates consistent spacing between form elements */
 }
 
 .form-group label {
-  display: block;
+  margin-bottom: 5px; /* Spacing between label and input */
+  display: block; /* Ensures label takes up its own line */
+  font-weight: bold; /* Makes label text bold */
 }
 
-.form-group input {
-  width: 100%;
+.form-group input,
+.form-group textarea {
+  width: 100%; /* Ensures full width */
   padding: 8px;
-  margin-top: 4px;
+  margin-bottom: 10px; /* Spacing after each input */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 4px; /* Rounded corners */
 }
 
-button {
-  padding: 10px 20px;
-  background: #3498db;
+.form-group textarea {
+  height: 100px; /* Sets a minimum height for text area */
+}
+
+button[type="submit"] {
+  padding: 10px 15px;
+  background-color: #4CAF50; /* A green color for the submit button */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth background color transition on hover */
 }
+
+button[type="submit"]:hover {
+  background-color: #45a049; /* Darker shade on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .event-form {
+    width: 90%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+}
+
 </style>
+
