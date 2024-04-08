@@ -39,9 +39,10 @@ export default {
   methods: {
     fetchEventDetails() {
       const eventId = this.id || this.$route.params.id;
-      axios.get(`https://sports-scheduling-yzsb.onrender.com/events/${eventId}`)
+      axios.get(`http://localhost:3000/events/${eventId}`)
           .then(response => {
             this.event = response.data;
+
           })
           .catch(error => {
             console.error('Error fetching event details:', error);

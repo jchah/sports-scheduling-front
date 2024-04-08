@@ -29,7 +29,7 @@
       </div>
       <div class="form-group">
         <label for="eventLeague">League:</label>
-        <input type="text" id="eventLeague" v-model="event.league" required>
+        <input type="text" id="eventLeague" v-model="event.league">
       </div>
       <button type="submit" class="btn btn-success">Add Event</button>
     </form>
@@ -64,7 +64,7 @@ export default {
         teams: this.event.teams.split(',').map(team => team.trim()) // Ensure teams are trimmed
       };
 
-      axios.post('https://sports-scheduling-yzsb.onrender.com/events', eventData)
+      axios.post('http://localhost:3000/events', eventData)
           .then(response => {
             // Handle success, such as showing a success message or redirecting
             console.log('Event added successfully:', response.data);

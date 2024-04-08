@@ -3,7 +3,7 @@
     <LeagueForm @league-added="handleLeagueAdded" />
     <h2>Leagues</h2>
     <ul class="list-group">
-      <li v-for="league in leagues" :key="league.id" class="list-group-item d-flex justify-content-between align-items-center">
+      <li v-for="league in leagues" :key="league._id" class="list-group-item d-flex justify-content-between align-items-center">
         <span>{{ league.name }} (Division: {{ league.division }})</span>
         <div>
           <button @click="editLeague(league)" class="btn btn-warning btn-sm">Edit</button>
@@ -34,7 +34,7 @@ export default {
       this.leagues.push(newLeague);
     },
     fetchLeagues() {
-      axios.get('https://sports-scheduling-yzsb.onrender.com/leagues')
+      axios.get('http://localhost:3000/leagues')
           .then(response => {
             this.leagues = response.data;
             console.log(this.leagues)
@@ -48,7 +48,7 @@ export default {
     },
     deleteLeague(id) {
       if (confirm('Are you sure you want to delete this league?')) {
-        axios.delete(`https://sports-scheduling-yzsb.onrender.com/leagues/${id}`)
+        axios.delete(`http://localhost:3000/leagues/${id}`)
             .then(() => {
               this.leagues = this.leagues.filter(league => league._id !== id);
               alert("League successfully deleted");

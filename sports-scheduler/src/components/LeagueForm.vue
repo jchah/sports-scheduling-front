@@ -11,6 +11,10 @@
         <input type="text" id="leagueSport" v-model="league.sport" required>
       </div>
       <div class="form-group">
+        <label for="leagueDivision">Division:</label>
+        <input type="text" id="leagueDivision" v-model="league.division" required>
+      </div>
+      <div class="form-group">
         <label for="leagueTeams">Teams (comma-separated):</label>
         <input type="text" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C">
       </div>
@@ -29,6 +33,7 @@ export default {
       league: {
         name: '',
         sport: '',
+        division: '',
       },
       teamNames: ''
     };
@@ -40,11 +45,11 @@ export default {
         teams: this.teamNames.split(',').map(team => team.trim()) // Convert string to array
       };
 
-      axios.post('https://sports-scheduling-yzsb.onrender.com/leagues', payload)
+      axios.post('http://localhost:3000/leagues', payload)
           .then(response => {
             alert('League added successfully');
             this.$emit('league-added', response.data);
-            this.league = { name: '', sport: '' }; // Reset form
+            this.league = { name: '', sport: '', division: ''}; // Reset form
             this.teamNames = '';
           })
           .catch(error => {

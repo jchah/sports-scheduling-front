@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     fetchEvents() {
-      axios.get('https://sports-scheduling-yzsb.onrender.com/events')
+      axios.get('http://localhost:3000/events')
           .then(response => {
             this.events = response.data;
             console.log('Events fetched:', this.events); // For debugging
@@ -60,7 +60,7 @@ export default {
       // Confirm with the user before deletion
       if (confirm('Are you sure you want to delete this event?')) {
         // Call your backend API to delete the event
-        axios.delete(`https://sports-scheduling-yzsb.onrender.com/events/${eventId}`)
+        axios.delete(`http://localhost:3000/events/${eventId}`)
             .then(() => {
               // Clear event immediately
               this.events = this.events.filter(event => event._id !== eventId);
