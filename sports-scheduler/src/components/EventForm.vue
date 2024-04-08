@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     submitForm() {
-      // Transform teams from comma-separated string to array
       const eventData = {
         ...this.event,
         teams: this.event.teams.split(',').map(team => team.trim()) // Ensure teams are trimmed
@@ -83,7 +82,7 @@ export default {
         startTime: '',
         endTime: '',
         location: '',
-        teams: '', // If this is a comma-separated string in your form
+        teams: '',
         league: ''
       };
     }
@@ -101,43 +100,42 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Creates consistent spacing between form elements */
+  gap: 15px;
 }
 
 .form-group label {
-  margin-bottom: 5px; /* Spacing between label and input */
-  display: block; /* Ensures label takes up its own line */
-  font-weight: bold; /* Makes label text bold */
+  margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
 }
 
 .form-group input,
 .form-group textarea {
-  width: 100%; /* Ensures full width */
+  width: 100%;
   padding: 8px;
-  margin-bottom: 10px; /* Spacing after each input */
-  border: 1px solid #ccc; /* Subtle border */
-  border-radius: 4px; /* Rounded corners */
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .form-group textarea {
-  height: 100px; /* Sets a minimum height for text area */
+  height: 100px;
 }
 
 button[type="submit"] {
   padding: 10px 15px;
-  background-color: #4CAF50; /* A green color for the submit button */
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+  transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #45a049; /* Darker shade on hover */
+  background-color: #45a049;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .event-form {
     width: 90%;

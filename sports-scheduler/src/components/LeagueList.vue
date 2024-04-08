@@ -1,12 +1,13 @@
 <template>
   <div class="container mt-4">
+    <LeagueForm @league-added="handleLeagueAdded" />
     <h2>Leagues</h2>
     <ul class="list-group">
       <li v-for="league in leagues" :key="league.id" class="list-group-item d-flex justify-content-between align-items-center">
         <span>{{ league.name }} (Division: {{ league.division }})</span>
         <div>
           <button @click="editLeague(league)" class="btn btn-warning btn-sm">Edit</button>
-          <button @click="deleteLeague(league.id)" class="btn btn-danger btn-sm">Delete</button>
+          <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete</button>
         </div>
       </li>
     </ul>
@@ -14,26 +15,48 @@
 </template>
 
 <script>
+import axios from "axios";
+import LeagueForm from "@/components/LeagueForm.vue";
+
 export default {
   name: 'LeagueList',
+  components: {LeagueForm},
   data() {
     return {
-      // This would be fetched from the API
-      leagues: [
-        { id: 1, name: 'Premier League', division: 'First' },
-        // ... other leagues
-      ]
+      leagues: []
     };
   },
+  created() {
+    this.fetchLeagues();
+  },
   methods: {
+    handleLeagueAdded(newLeague) {
+      this.leagues.push(newLeague);
+    },
+    fetchLeagues() {
+      axios.get('https://sports-scheduling-yzsb.onrender.com/leagues')
+          .then(response => {
+            this.leagues = response.data;
+            console.log(this.leagues)
+          })
+          .catch(error => {
+            console.error('Error fetching leagues:', error);
+          });
+    },
     editLeague(league) {
-      // Route to the LeagueForm.vue component with the league data for editing
-      this.$router.push({ name: 'LeagueForm', params: { league: league } });
+      this.$router.push({ name: 'LeagueForm', params: { leagueData: league } });
     },
     deleteLeague(id) {
-      // Call to API to delete a league, then remove it from the list
-      console.log('Deleting league with id:', id);
-      // Here you might show a confirmation dialog before deleting
+      if (confirm('Are you sure you want to delete this league?')) {
+        axios.delete(`https://sports-scheduling-yzsb.onrender.com/leagues/${id}`)
+            .then(() => {
+              this.leagues = this.leagues.filter(league => league._id !== id);
+              alert("League successfully deleted");
+            })
+            .catch(error => {
+              console.error('Error deleting league:', error);
+            })
+      }
     }
   }
 }

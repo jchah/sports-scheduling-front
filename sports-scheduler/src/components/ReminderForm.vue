@@ -40,7 +40,6 @@ export default {
         message: ''
       },
       events: [
-        // Placeholder for event data
         { id: 1, name: 'Event 1' },
         { id: 2, name: 'Event 2' }
         // More events...

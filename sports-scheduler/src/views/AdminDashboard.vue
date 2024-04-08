@@ -14,7 +14,6 @@
         <h2>User Administration</h2>
         <p>Manage user accounts and permissions.</p>
       </div>
-      <!-- Add more sections as needed -->
     </div>
   </div>
 </template>

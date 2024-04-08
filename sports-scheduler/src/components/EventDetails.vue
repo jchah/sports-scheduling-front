@@ -62,13 +62,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.event-details {
-  /* ... */
-}
-
-.map-container {
-  /* ... */
-}
-</style>
