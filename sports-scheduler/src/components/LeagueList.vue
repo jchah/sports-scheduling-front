@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <LeagueForm @league-added="handleLeagueAdded" />
+    <button @click="openForm()" class="btn btn-success btn-lg">Add League</button>
     <h2>Leagues</h2>
     <ul class="list-group">
       <li v-for="league in leagues" :key="league._id" class="list-group-item d-flex justify-content-between align-items-center">
@@ -16,11 +16,9 @@
 
 <script>
 import axios from "axios";
-import LeagueForm from "@/components/LeagueForm.vue";
 
 export default {
   name: 'LeagueList',
-  components: {LeagueForm},
   data() {
     return {
       leagues: []
@@ -57,6 +55,9 @@ export default {
               console.error('Error deleting league:', error);
             })
       }
+    },
+    openForm() {
+      this.$router.push({ name: 'NewLeague'});
     }
   }
 }

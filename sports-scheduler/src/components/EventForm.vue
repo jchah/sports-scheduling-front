@@ -52,7 +52,7 @@ export default {
         startTime: '',
         endTime: '',
         location: '',
-        teams: '', // Need to split this into an array before submission
+        teams: '',
         league: ''
       }
     };
@@ -66,12 +66,10 @@ export default {
 
       axios.post('http://localhost:3000/events', eventData)
           .then(response => {
-            // Handle success, such as showing a success message or redirecting
             console.log('Event added successfully:', response.data);
             this.clearForm();
           })
           .catch(error => {
-            // Handle error, such as showing an error message
             console.error('Error adding event:', error);
           });
     },
