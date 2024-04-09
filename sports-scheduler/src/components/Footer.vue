@@ -1,7 +1,7 @@
 <template>
   <footer className="site-footer bg-dark text-white py-4">
     <div className="container">
-      <p className="mb-0">&copy; {{ currentYear }} My Sports Scheduler. All rights reserved.</p>
+      <p className="mb-0">&copy; {{ currentYear }} Sports Scheduler. All rights reserved.</p>
     </div>
   </footer>
 </template>

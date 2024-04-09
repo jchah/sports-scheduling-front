@@ -9,11 +9,22 @@
       </div>
       <div class="form-group">
         <label for="leagueSport">Sport:</label>
-        <input type="text" id="leagueSport" v-model="league.sport" required>
+        <select id="leagueSport" v-model="league.sport" required>
+          <option disabled value="">Please select one</option>
+          <option value="Soccer">Soccer</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Baseball">Baseball</option>
+          <option value="Football">Football</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="leagueDivision">Division:</label>
-        <input type="text" id="leagueDivision" v-model="league.division" required>
+        <select id="leagueDivision" v-model="league.division" required>
+          <option disabled value="">Please select one</option>
+          <option value="1">D1</option>
+          <option value="2">D2</option>
+          <option value="3">D3</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="leagueTeams">Teams (comma-separated):</label>
