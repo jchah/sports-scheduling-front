@@ -1,7 +1,6 @@
 <template>
   <div class="container mt-4">
     <div class="controls-container">
-      <button @click="openForm()" class="btn btn-success btn-lg">Add Event</button>
       <div class="sort-controls">
         <select v-model="sortKey">
           <option value="">Select Sort Option</option>
@@ -13,38 +12,36 @@
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-
-
         <input type="text" v-model="filterByLeague" placeholder="Filter by League">
         <input type="text" v-model="filterByTitle" placeholder="Filter by Title">
+        <button @click="openForm()" class="btn btn-success btn-lg ml1">Add Event</button>
       </div>
     </div>
     <h2>Upcoming Events</h2>
     <div v-if="paginatedEvents.length">
-      <table class="table">
-        <thead>
-        <tr>
-          <th scope="col">Event Title</th>
-          <th scope="col">Start Time</th>
-          <th scope="col">End Time</th>
-          <th scope="col">Location</th>
-          <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="event in paginatedEvents" :key="event._id">
-          <td>{{ event.title }}</td>
-          <td>{{ new Date(event.startTime).toLocaleString() }}</td>
-          <td>{{ new Date(event.endTime).toLocaleString() }}</td>
-          <td>{{ event.location }}</td>
-          <td>
-            <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
-            <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <!-- Pagination Controls -->
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Event Title</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Location</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="event in paginatedEvents" :key="event._id">
+            <td>{{ event.title }}</td>
+            <td>{{ new Date(event.startTime).toLocaleString() }}</td>
+            <td>{{ new Date(event.endTime).toLocaleString() }}</td>
+            <td>
+              <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
+              <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
       <nav aria-label="Page navigation">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -55,6 +52,14 @@
           </li>
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
+          </li>
+          <li class="page-item ml1">
+            <div class="input-group">
+              <input type="number" class="form-control form-control-sm" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="goToPage">Go</button>
+              </div>
+            </div>
           </li>
         </ul>
       </nav>
@@ -72,6 +77,7 @@ export default {
   name: 'EventList',
   data() {
     return {
+      jumpToPage: null,
       events: [],
       currentPage: 1,
       eventsPerPage: 8,
@@ -82,6 +88,15 @@ export default {
     };
   },
   watch: {
+    '$route'(to) {
+      if (to.params.page) {
+        const newPage = Math.max(1, Math.min(parseInt(to.params.page, 10), this.totalPages));
+        if (newPage !== this.currentPage) {
+          this.currentPage = newPage;
+          this.fetchEvents();
+        }
+      }
+    },
     sortKey(newVal) {
       this.updateSortQuery(newVal, this.sortOrder);
     },
@@ -129,9 +144,20 @@ export default {
     }
   },
   created() {
+    const page = parseInt(this.$route.params.page, 10) || 1;
+    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
     this.fetchEvents();
   },
   methods: {
+    goToPage() {
+      // Ensure the input is a valid number within the page range
+      const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
+
+      if (!isNaN(pageNumber) && pageNumber !== this.currentPage) {
+        this.changePage(pageNumber); // Use your existing method to change the page
+        this.jumpToPage = null; // Reset the input field
+      }
+    },
     updateSortQuery(sortKey, sortOrder) {
       this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
     },
@@ -139,10 +165,19 @@ export default {
       axios.get('http://localhost:3000/events')
           .then(response => {
             this.events = response.data;
+            this.updatePageOnFetch();
           })
           .catch(error => {
             console.error('Error fetching events:', error);
           });
+    },
+    updatePageOnFetch() {
+      const pageFromUrl = parseInt(this.$route.params.page, 10);
+      const page = isNaN(pageFromUrl) ? 1 : pageFromUrl;
+      this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+      if (this.currentPage !== pageFromUrl) {
+        this.$router.replace({ name: 'EventList', params: { page: this.currentPage } });
+      }
     },
     deleteEvent(eventId) {
       if (confirm('Are you sure you want to delete this event?')) {
@@ -163,47 +198,15 @@ export default {
     },
     changePage(page) {
       this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+      this.$router.push({ name: 'EventList', params: { page: this.currentPage } });
     }
   }
 }
 </script>
 
 <style>
-/* Apply a consistent class for both selects and inputs */
-.form-control {
-  height: 38px; /* Match height of inputs */
-  padding: 6px 12px; /* Match padding of inputs */
-  border: 1px solid #ccc; /* Match border of inputs */
-  border-radius: 4px; /* Match border-radius of inputs */
-  font-size: 16px; /* Optional: Adjust the font size as needed */
-}
-
-/* Apply the .form-control class to selects in your component */
-.sort-controls select {
-  margin-right: 5px; /* Maintain spacing between controls */
-}
-
-/* Remove default margins from selects if they are inheriting any styles from other CSS */
-.sort-controls select {
-  margin: 0; /* Remove default margins if present */
-}
-
-@media (max-width: 768px) {
-  .sort-controls select, .sort-controls input {
-    margin-bottom: 10px; /* Space between controls when stacked */
-    width: 100%; /* Controls should expand to the full width */
-  }
-}
-
-
-.controls-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sort-controls select, .sort-controls input {
-  margin-right: 5px;
+.ml1 {
+  margin-left: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -220,5 +223,10 @@ export default {
   .sort-controls select, .sort-controls input {
     margin-bottom: 10px;
   }
+}
+
+.table td {
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 </style>

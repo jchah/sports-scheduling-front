@@ -4,12 +4,12 @@
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
-        <label for="eventTitle">Event Title:</label>
-        <input type="text" id="eventTitle" v-model="event.title" required>
+        <label for="eventTitle">Event Title (max 20 chars):</label>
+        <input type="text" id="eventTitle" v-model="event.title" @input="checkInput" maxlength=20 required>
       </div>
       <div class="form-group">
-        <label for="eventDescription">Description:</label>
-        <textarea id="eventDescription" v-model="event.description" required></textarea>
+        <label for="eventDescription">Description: (max 300 chars)</label>
+        <textarea id="eventDescription" v-model="event.description" @input="checkInput" maxlength=300 required></textarea>
       </div>
       <div class="form-group">
         <label for="eventStartTime">Start Time:</label>
@@ -20,16 +20,16 @@
         <input type="datetime-local" id="eventEndTime" v-model="event.endTime" required>
       </div>
       <div class="form-group">
-        <label for="eventLocation">Location:</label>
-        <input type="text" id="eventLocation" v-model="event.location" required>
+        <label for="eventLocation">Location: (max 40 chars)</label>
+        <input type="text" id="eventLocation" v-model="event.location" @input="checkInput" maxlength=40 required>
       </div>
       <div class="form-group">
-        <label for="eventTeams">Teams (comma-separated):</label>
-        <input type="text" id="eventTeams" v-model="event.teams" required>
+        <label for="eventTeams">Teams (comma-separated, max 80 chars):</label>
+        <input type="text" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength=80 required>
       </div>
       <div class="form-group">
-        <label for="eventLeague">League:</label>
-        <input type="text" id="eventLeague" v-model="event.league">
+        <label for="eventLeague">League (max 20 chars):</label>
+        <input type="text" id="eventLeague" v-model="event.league" maxlength=20 @input="checkInput">
       </div>
       <button type="submit" class="btn btn-success">Add Event</button>
     </form>
@@ -54,7 +54,7 @@ export default {
         location: '',
         teams: '',
         league: ''
-      }
+      },
     };
   },
   methods: {
@@ -72,6 +72,16 @@ export default {
           .catch(error => {
             console.error('Error adding event:', error);
           });
+    },
+    checkInput(event) {
+      const originalText = event.target.value;
+      const regex = /[^a-zA-Z0-9\s.,?!@$&]/g;
+      const filteredText = originalText.replace(regex, '');
+      event.target.value = filteredText;
+
+      if (originalText !== filteredText) {
+        this.event[event.target.id.slice(5).toLowerCase()] = filteredText;
+      }
     },
     clearForm() {
       this.event = {
@@ -141,6 +151,4 @@ button[type="submit"]:hover {
     padding: 15px;
   }
 }
-
 </style>
-

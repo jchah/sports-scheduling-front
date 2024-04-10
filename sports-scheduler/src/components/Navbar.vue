@@ -11,10 +11,10 @@
             <router-link to="/" class="nav-link" exact-active-class="active">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/events" class="nav-link" exact-active-class="active">Events</router-link>
+            <router-link to="/events/pg/1" class="nav-link" exact-active-class="active">Events</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/leagues" class="nav-link" exact-active-class="active">Leagues</router-link>
+            <router-link to="/leagues/pg/1" class="nav-link" exact-active-class="active">Leagues</router-link>
           </li>
         </ul>
         <!-- Conditional rendering for login/logout -->

@@ -7,6 +7,7 @@ import EventForm from '@/components/EventForm.vue';
 import LeagueForm from '@/components/LeagueForm.vue';
 import EventDetails from '@/components/EventDetails.vue';
 import LoginForm from "@/components/LoginForm.vue";
+import LeagueDetails from "@/components/LeagueDetails.vue";
 
 // Define routes
 const routes = [
@@ -14,11 +15,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
-  },
-  {
-    path: '/events',
-    name: 'EventList',
-    component: EventList
   },
   {
     path: '/events/new',
@@ -32,7 +28,7 @@ const routes = [
     props: true
   },
   {
-    path: '/leagues',
+    path: '/leagues/pg/:page',
     name: 'LeagueList',
     component: LeagueList
   },
@@ -40,6 +36,17 @@ const routes = [
     path: '/leagues/new',
     name: 'NewLeague',
     component: LeagueForm
+  },
+  {
+    path: '/leagues/:id',
+    name: 'LeagueDetails',
+    component: LeagueDetails,
+    props: true
+  },
+  {
+    path: '/events/pg/:page',
+    name: 'EventList',
+    component: EventList
   },
   {
     path: '/login',

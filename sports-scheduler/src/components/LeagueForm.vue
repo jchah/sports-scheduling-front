@@ -4,8 +4,8 @@
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitLeague">
       <div class="form-group">
-        <label for="leagueName">League Name:</label>
-        <input type="text" id="leagueName" v-model="league.name" required>
+        <label for="leagueName">League Name (max 20 chars):</label>
+        <input type="text" id="leagueName" v-model="league.name" @input="checkInput" maxlength=20 required>
       </div>
       <div class="form-group">
         <label for="leagueSport">Sport:</label>
@@ -27,8 +27,9 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="leagueTeams">Teams (comma-separated):</label>
-        <input type="text" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C">
+        <label for="leagueTeams">Teams (comma-separated, max 100 chars):</label>
+        <input type="text" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C"
+               @input="checkInput" maxlength="100">
       </div>
       <button type="submit" class="btn btn-success">Add League</button>
     </form>
@@ -69,6 +70,20 @@ export default {
             console.error('Error adding league:', error);
             alert('Failed to add league');
           });
+    },
+    checkInput(event) {
+      const originalText = event.target.value;
+      const regex = /[^a-zA-Z0-9\s.,?!@$&-]/g;
+      const filteredText = originalText.replace(regex, '');
+      event.target.value = filteredText;
+
+      if (originalText !== filteredText) {
+        if(event.target.id === 'leagueTeams') {
+          this.teamNames = filteredText;
+        } else {
+          this.league[event.target.id.slice(6).toLowerCase()] = filteredText;
+        }
+      }
     },
     clearForm() {
       this.league = { name: '', sport: '', division: '' }; // Reset form fields
