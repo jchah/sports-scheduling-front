@@ -1,5 +1,4 @@
 <template>
-  <BackButton/>
   <div class="event-form">
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitForm">
@@ -28,23 +27,32 @@
         <input type="text" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength=200 required>
       </div>
       <div class="form-group">
-        <label for="eventLeague">League (max 50 chars):</label>
-        <input type="text" id="eventLeague" v-model="event.league" @input="checkInput" maxlength=50>
+        <label for="eventLeague">League:</label>
+        <select id="eventLeague" v-model="event.league">
+          <option disabled value="">Select a League</option>
+          <option v-for="league in leagues" :key="league._id" :value="league.name">
+            {{ league.name }}
+          </option>
+        </select>
       </div>
-      <button type="submit" class="btn btn-success">Update Event</button>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-success mt">Update Event</button>
+        <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary back">
+          <slot>← Go back</slot>
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import BackButton from '@/components/BackButton.vue';
 
 export default {
   name: 'EventDetails',
-  components: { BackButton },
   data() {
     return {
+      currentPage: this.$route.query.currentPage || '',
       formTitle: 'Event Details',
       event: {
         title: '',
@@ -55,6 +63,7 @@ export default {
         teams: '',
         league: ''
       },
+      leagues: []
     };
   },
   methods: {
@@ -65,9 +74,8 @@ export default {
       };
 
       axios.put(`http://localhost:3000/events/${this.$route.params.id}`, eventData)
-          .then(response => {
-            console.log('Event updated successfully:', response.data);
-            // Handle success, such as redirecting or showing a message
+          .then(() => {
+            alert('Event updated successfully');
           })
           .catch(error => {
             console.error('Error updating event:', error);
@@ -101,15 +109,31 @@ export default {
           .catch(error => {
             console.error('Error fetching event details:', error);
           });
-    }
+    },
+    fetchLeagues() {
+      axios.get('http://localhost:3000/leagues')
+          .then(response => {
+            this.leagues = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching leagues:', error);
+          });
+    },
   },
   created() {
+    this.fetchLeagues();
     this.fetchEventDetails();
   }
 }
 </script>
 
 <style>
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .event-form {
   max-width: 500px;
   margin: 20px auto;

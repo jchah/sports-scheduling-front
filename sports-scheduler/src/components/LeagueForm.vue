@@ -1,5 +1,4 @@
 <template>
-  <BackButton />
   <div class="league-form">
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitLeague">
@@ -11,10 +10,27 @@
         <label for="leagueSport">Sport:</label>
         <select id="leagueSport" v-model="league.sport" required>
           <option disabled value="">Please select one</option>
-          <option value="Soccer">Soccer</option>
-          <option value="Basketball">Basketball</option>
+          <option value="American Football">American Football</option>
+          <option value="Badminton">Badminton</option>
           <option value="Baseball">Baseball</option>
-          <option value="Football">Football</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Bowling">Bowling</option>
+          <option value="Boxing">Boxing</option>
+          <option value="Chess">Chess</option>
+          <option value="Cricket">Cricket</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Equestrian">Equestrian</option>
+          <option value="Golf">Golf</option>
+          <option value="Gymnastics">Gymnastics</option>
+          <option value="Hockey">Hockey</option>
+          <option value="Martial Arts">Martial Arts</option>
+          <option value="Rugby">Rugby</option>
+          <option value="Soccer">Soccer</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Table Tennis">Table Tennis</option>
+          <option value="Tennis">Tennis</option>
+          <option value="Track and Field">Track and Field</option>
+          <option value="Volleyball">Volleyball</option>
         </select>
       </div>
       <div class="form-group">
@@ -24,14 +40,18 @@
           <option value="1">D1</option>
           <option value="2">D2</option>
           <option value="3">D3</option>
+          <option value="N/A">N/A</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="leagueTeams">Teams (comma-separated, max 100 chars):</label>
+        <label for="leagueTeams">Teams (comma-separated, max 300 chars):</label>
         <input type="text" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C"
-               @input="checkInput" maxlength="100">
+               @input="checkInput" maxlength="300">
       </div>
-      <button type="submit" class="btn btn-success">Add League</button>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-success mt">Add Event</button>
+        <BackButton/>
+      </div>
     </form>
   </div>
 </template>
@@ -49,22 +69,35 @@ export default {
       league: {
         name: '',
         sport: '',
+        teams: [],
         division: '',
       },
-      teamNames: ''
+      teamNames: '',
+      leagues: [],
     };
   },
   methods: {
-    submitLeague() {
+    async submitLeague() {
+      await this.fetchLeagues();
       const payload = {
         ...this.league,
         teams: this.teamNames.split(',').map(team => team.trim())
       };
 
+      console.log("Payload: " + payload);
+
+      for (let i = 0; i < this.leagues.length; i++) {
+        if (this.leagues[i].name === this.league.name) {
+          alert("Name " + this.league.name + " already exists!")
+          return;
+        }
+      }
+
       axios.post('http://localhost:3000/leagues', payload)
           .then(response => {
+            alert('League added successfully');
             console.log('League added successfully:', response.data);
-            this.clearForm(); // Clear form after submission
+            this.clearForm();
           })
           .catch(error => {
             console.error('Error adding league:', error);
@@ -88,12 +121,27 @@ export default {
     clearForm() {
       this.league = { name: '', sport: '', division: '' }; // Reset form fields
       this.teamNames = '';
+    },
+    fetchLeagues() {
+      return axios.get('http://localhost:3000/leagues')
+          .then(response => {
+            this.leagues = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching leagues:', error);
+          });
     }
   }
 }
 </script>
 
 <style>
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .league-form {
   max-width: 500px;
   margin: 20px auto;

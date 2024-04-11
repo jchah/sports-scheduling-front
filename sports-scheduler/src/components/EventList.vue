@@ -14,7 +14,7 @@
         </select>
         <input type="text" v-model="filterByLeague" placeholder="Filter by League">
         <input type="text" v-model="filterByTitle" placeholder="Filter by Title">
-        <button @click="openForm()" class="btn btn-success btn-lg ml1">Add Event</button>
+        <button @click="openForm()" class="btn btn-success ml1">Add Event</button>
       </div>
     </div>
     <h2>Upcoming Events</h2>
@@ -65,7 +65,7 @@
       </nav>
     </div>
     <div v-else>
-      <p>No events to display. Check back later!</p>
+      <b>No events to display. Check back later!</b>
     </div>
   </div>
 </template>
@@ -150,12 +150,11 @@ export default {
   },
   methods: {
     goToPage() {
-      // Ensure the input is a valid number within the page range
       const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
 
       if (!isNaN(pageNumber) && pageNumber !== this.currentPage) {
-        this.changePage(pageNumber); // Use your existing method to change the page
-        this.jumpToPage = null; // Reset the input field
+        this.changePage(pageNumber);
+        this.jumpToPage = null;
       }
     },
     updateSortQuery(sortKey, sortOrder) {
@@ -191,7 +190,7 @@ export default {
       }
     },
     viewDetails(id) {
-      this.$router.push({ name: 'EventDetails', params: { id } });
+      this.$router.push({ name: 'EventDetails', params: { id }, query: {currentPage: this.currentPage}});
     },
     openForm() {
       this.$router.push({ name: 'NewEvent' });

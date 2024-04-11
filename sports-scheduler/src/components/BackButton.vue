@@ -1,6 +1,6 @@
 <template>
   <button @click="goBack" class="btn btn-secondary">
-    <slot>Back</slot>
+    <slot>← Go back</slot>
   </button>
 </template>
 
@@ -19,5 +19,6 @@ export default {
 .btn {
   padding: 10px 15px;
   cursor: pointer;
+  margin-top: 1.5rem;
 }
 </style>

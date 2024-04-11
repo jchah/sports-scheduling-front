@@ -1,5 +1,4 @@
 <template>
-  <BackButton/>
   <div class="event-form">
     <h2>{{ formTitle }}</h2>
     <form @submit.prevent="submitForm">
@@ -28,10 +27,18 @@
         <input type="text" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength=80 required>
       </div>
       <div class="form-group">
-        <label for="eventLeague">League (max 20 chars):</label>
-        <input type="text" id="eventLeague" v-model="event.league" maxlength=20 @input="checkInput">
+        <label for="eventLeague">League:</label>
+        <select id="eventLeague" v-model="event.league">
+          <option disabled value="">Select a League</option>
+          <option v-for="league in leagues" :key="league._id" :value="league.name">
+            {{ league.name }}
+          </option>
+        </select>
       </div>
-      <button type="submit" class="btn btn-success">Add Event</button>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-success mt">Add Event</button>
+        <BackButton/>
+      </div>
     </form>
   </div>
 </template>
@@ -55,18 +62,31 @@ export default {
         teams: '',
         league: ''
       },
+      leagues: []
     };
   },
+  created() {
+    this.fetchLeagues();
+  },
   methods: {
+    fetchLeagues() {
+      axios.get('http://localhost:3000/leagues')
+          .then(response => {
+            this.leagues = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching leagues:', error);
+          });
+    },
     submitForm() {
       const eventData = {
         ...this.event,
-        teams: this.event.teams.split(',').map(team => team.trim()) // Ensure teams are trimmed
+        teams: this.event.teams.split(',').map(team => team.trim())
       };
 
       axios.post('http://localhost:3000/events', eventData)
-          .then(response => {
-            console.log('Event added successfully:', response.data);
+          .then(() => {
+            alert('Event added successfully');
             this.clearForm();
           })
           .catch(error => {
@@ -99,9 +119,16 @@ export default {
 </script>
 
 <style>
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .event-form {
   max-width: 500px;
-  margin: 20px auto;
+  margin: 10px auto 20px;
   padding: 20px;
   background: #f8f8f8;
   border-radius: 10px;

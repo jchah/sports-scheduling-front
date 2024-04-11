@@ -2,7 +2,7 @@
   <div class="container py-5">
     <div class="row mb-4">
       <div class="col-lg-8 mx-auto text-center">
-        <h1>Welcome to My Sports Scheduler!</h1>
+        <h1>Welcome to Sportz Plannerrz!</h1>
         <p class="lead">This is your go-to app for managing and scheduling sports events.</p>
       </div>
     </div>
@@ -11,7 +11,6 @@
       <div class="col-lg-12">
         <h2 class="mb-3">Features:</h2>
         <div class="row">
-          <!-- Feature 1 -->
           <div class="col-md-4 mb-4">
             <div class="card h-100">
               <div class="card-body">
@@ -20,7 +19,6 @@
               </div>
             </div>
           </div>
-          <!-- Feature 2 -->
           <div class="col-md-4 mb-4">
             <div class="card h-100">
               <div class="card-body">
@@ -45,8 +43,8 @@
     <div class="row mt-5">
       <div class="col-lg-12 text-center">
         <h2 class="mb-4">Quick Links:</h2>
-        <router-link to="/events" class="btn btn-primary m-2">View Events</router-link>
-        <router-link to="/leagues" class="btn btn-primary m-2">View Leagues</router-link>
+        <router-link to="/events/pg/1" class="btn btn-primary m-2 btn-lg">View Events</router-link>
+        <router-link to="/leagues/pg/2" class="btn btn-primary m-2 btn-lg">View Leagues</router-link>
         <!-- Add more links as necessary -->
       </div>
     </div>

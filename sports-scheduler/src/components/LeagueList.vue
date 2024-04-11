@@ -13,11 +13,30 @@
         </select>
         <select v-model="filterBySport">
           <option value="">Select Sport</option>
-          <option value="Football">Football</option>
+          <option value="American Football">American Football</option>
+          <option value="Badminton">Badminton</option>
+          <option value="Baseball">Baseball</option>
           <option value="Basketball">Basketball</option>
+          <option value="Bowling">Bowling</option>
+          <option value="Boxing">Boxing</option>
+          <option value="Chess">Chess</option>
+          <option value="Cricket">Cricket</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Equestrian">Equestrian</option>
+          <option value="Golf">Golf</option>
+          <option value="Gymnastics">Gymnastics</option>
+          <option value="Hockey">Hockey</option>
+          <option value="Martial Arts">Martial Arts</option>
+          <option value="Rugby">Rugby</option>
+          <option value="Soccer">Soccer</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Table Tennis">Table Tennis</option>
+          <option value="Tennis">Tennis</option>
+          <option value="Track and Field">Track and Field</option>
+          <option value="Volleyball">Volleyball</option>
         </select>
         <input type="text" v-model="filterByName" placeholder="Filter by League Name">
-        <button @click="openForm()" class="btn btn-success btn-lg ml1">Add League</button>
+        <button @click="openForm()" class="btn btn-success ml1">Add League</button>
       </div>
     </div>
     <h2>Leagues</h2>
@@ -36,7 +55,7 @@
             <td>{{ league.name }}</td>
             <td>{{ league.division }}</td>
             <td>
-              <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View</button>
+              <button @click="viewLeagueDetails(league._id, this.currentPage)" class="btn btn-primary btn-sm">View</button>
               <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete</button>
             </td>
           </tr>
@@ -54,11 +73,19 @@
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
           </li>
+          <li class="page-item ml1">
+            <div class="input-group">
+              <input type="number" class="form-control form-control-sm" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="goToPage">Go</button>
+              </div>
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
     <div v-else>
-      <p>No leagues to display. Check back later!</p>
+      <b>No leagues to display. Check back later!</b>
     </div>
   </div>
 </template>
@@ -70,9 +97,10 @@ export default {
   name: 'LeagueList',
   data() {
     return {
+      jumpToPage: null,
       leagues: [],
       currentPage: 1,
-      leaguesPerPage: 9,
+      leaguesPerPage: 8,
       sortKey: this.$route.query.sortKey || '',
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByName: '',
@@ -132,6 +160,14 @@ export default {
     this.fetchLeagues();
   },
   methods: {
+    goToPage() {
+      const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
+
+      if (!isNaN(pageNumber) && pageNumber !== this.currentPage) {
+        this.changePage(pageNumber);
+        this.jumpToPage = null;
+      }
+    },
     updateSortQuery(sortKey, sortOrder) {
       this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
     },
@@ -165,7 +201,11 @@ export default {
       }
     },
     viewLeagueDetails(id) {
-      this.$router.push({ name: 'LeagueDetails', params: { id } });
+      this.$router.push({
+        name: 'LeagueDetails',
+        params: { id: id },
+        query: { currentPage: this.currentPage }
+      });
     },
     openForm() {
       this.$router.push({ name: 'NewLeague' });
