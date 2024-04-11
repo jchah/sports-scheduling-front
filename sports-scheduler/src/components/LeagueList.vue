@@ -1,17 +1,21 @@
 <template>
   <div class="container mt-4">
-    <div class="controls-container">
-      <div class="sort-controls">
-        <select v-model="sortKey">
+    <div class="row mb-3 align-items-center">
+      <div class="col-auto">
+        <select class="form-select" v-model="sortKey">
           <option value="">Select Sort Option</option>
           <option value="alphabetical">Alphabetical</option>
           <option value="division">Division</option>
         </select>
-        <select v-model="sortOrder">
+      </div>
+      <div class="col-auto">
+        <select class="form-select" v-model="sortOrder">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-        <select v-model="filterBySport">
+      </div>
+      <div class="col-auto">
+        <select class="form-select" v-model="filterBySport">
           <option value="">Select Sport</option>
           <option value="American Football">American Football</option>
           <option value="Badminton">Badminton</option>
@@ -35,8 +39,12 @@
           <option value="Track and Field">Track and Field</option>
           <option value="Volleyball">Volleyball</option>
         </select>
-        <input type="text" v-model="filterByName" placeholder="Filter by League Name">
-        <button @click="openForm()" class="btn btn-success ml1">Add League</button>
+      </div>
+      <div class="col-auto">
+        <input type="text" class="form-control" v-model="filterByName" placeholder="Filter by League Name">
+      </div>
+      <div class="col-auto">
+        <button @click="openForm()" class="btn btn-success">Add League</button>
       </div>
     </div>
     <h2>Leagues</h2>
@@ -238,16 +246,6 @@ export default {
   margin-left: 1rem;
 }
 @media (max-width: 768px) {
-  .controls-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .sort-controls {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   .sort-controls select, .sort-controls input {
     margin-bottom: 10px;
   }

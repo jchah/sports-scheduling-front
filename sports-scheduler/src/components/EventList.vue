@@ -1,22 +1,31 @@
 <template>
   <div class="container mt-4">
-    <div class="controls-container">
-      <div class="sort-controls">
-        <select v-model="sortKey">
+    <div class="row mb-3 align-items-center">
+      <div class="col-auto">
+        <select class="form-select form-select" v-model="sortKey">
           <option value="">Select Sort Option</option>
           <option value="date">Date</option>
           <option value="league">League</option>
           <option value="alphabet">Alphabetical</option>
         </select>
-        <select v-model="sortOrder">
+      </div>
+      <div class="col-auto">
+        <select class="form-select form-select" v-model="sortOrder">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-        <input type="text" v-model="filterByLeague" placeholder="Filter by League">
-        <input type="text" v-model="filterByTitle" placeholder="Filter by Title">
-        <button @click="openForm()" class="btn btn-success ml1">Add Event</button>
+      </div>
+      <div class="col-auto">
+        <input type="text" class="form-control form-control" v-model="filterByLeague" placeholder="Filter by League">
+      </div>
+      <div class="col-auto">
+        <input type="text" class="form-control form-control" v-model="filterByTitle" placeholder="Filter by Title">
+      </div>
+      <div class="col-auto">
+        <button @click="openForm()" class="btn btn-success btn">Add Event</button>
       </div>
     </div>
+
     <h2>Upcoming Events</h2>
     <div v-if="paginatedEvents.length">
       <div class="table-responsive">
@@ -27,6 +36,7 @@
             <th scope="col">Start Time</th>
             <th scope="col">End Time</th>
             <th scope="col">Location</th>
+            <th scope="col">Actions</th>
           </tr>
           </thead>
           <tbody>
@@ -34,6 +44,7 @@
             <td>{{ event.title }}</td>
             <td>{{ new Date(event.startTime).toLocaleString() }}</td>
             <td>{{ new Date(event.endTime).toLocaleString() }}</td>
+            <td>{{ event.location }}</td>
             <td>
               <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
               <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
