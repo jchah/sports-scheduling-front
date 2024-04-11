@@ -49,7 +49,7 @@
                @input="checkInput" maxlength="300">
       </div>
       <div class="btn-container">
-        <button type="submit" class="btn btn-success mt">Add Event</button>
+        <button type="submit" class="btn btn-success mt">Add League</button>
         <BackButton/>
       </div>
     </form>

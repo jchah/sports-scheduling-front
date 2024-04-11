@@ -42,8 +42,8 @@
           <tbody>
           <tr v-for="event in paginatedEvents" :key="event._id">
             <td>{{ event.title }}</td>
-            <td>{{ new Date(event.startTime).toLocaleString() }}</td>
-            <td>{{ new Date(event.endTime).toLocaleString() }}</td>
+            <td>{{ new Date(event.startTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
+            <td>{{ new Date(event.endTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
             <td>{{ event.location }}</td>
             <td>
               <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
@@ -220,16 +220,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .controls-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .sort-controls {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   .sort-controls select, .sort-controls input {
     margin-bottom: 10px;
   }

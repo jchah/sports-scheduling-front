@@ -64,7 +64,7 @@
             <td>{{ league.division }}</td>
             <td>
               <button @click="viewLeagueDetails(league._id, this.currentPage)" class="btn btn-primary btn-sm">View</button>
-              <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete</button>
+              <button @click="deleteLeague(league._id, league.name)" class="btn btn-danger btn-sm">Delete</button>
             </td>
           </tr>
           </tbody>
@@ -197,17 +197,16 @@ export default {
         this.$router.replace({ name: 'LeagueList', params: { page: this.currentPage } });
       }
     },
-    deleteLeague(id) {
+    async deleteLeague(id, name) {
       if (confirm('Are you sure you want to delete this league?')) {
-        axios.get('http://localhost:3000/events')
+        await axios.get('http://localhost:3000/events')
             .then(response => {
               const allEvents = response.data;
-              const eventsToUpdate = allEvents.filter(event => event.league === id);
+              const eventsToUpdate = allEvents.filter(event => event.league === name);
               const updatePromises = eventsToUpdate.map(event => {
                 const updatedEvent = { ...event, league: '' };
                 return axios.put(`http://localhost:3000/events/${event._id}`, updatedEvent);
               });
-
               return Promise.all(updatePromises);
             })
             .then(() => {
