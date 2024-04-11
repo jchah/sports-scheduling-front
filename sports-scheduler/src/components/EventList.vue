@@ -46,8 +46,10 @@
             <td>{{ new Date(event.endTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
             <td>{{ event.location }}</td>
             <td>
-              <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
-              <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Event Actions">
+                <button @click="viewDetails(event._id)" class="btn btn-primary">View</button>
+                <button @click="deleteEvent(event._id)" class="btn btn-danger">Delete</button>
+              </div>
             </td>
           </tr>
           </tbody>
