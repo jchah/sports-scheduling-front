@@ -191,12 +191,26 @@ export default {
     },
     deleteLeague(id) {
       if (confirm('Are you sure you want to delete this league?')) {
-        axios.delete(`http://localhost:3000/leagues/${id}`)
+        axios.get('http://localhost:3000/events')
+            .then(response => {
+              const allEvents = response.data;
+              const eventsToUpdate = allEvents.filter(event => event.league === id);
+              const updatePromises = eventsToUpdate.map(event => {
+                const updatedEvent = { ...event, league: '' };
+                return axios.put(`http://localhost:3000/events/${event._id}`, updatedEvent);
+              });
+
+              return Promise.all(updatePromises);
+            })
+            .then(() => {
+              return axios.delete(`http://localhost:3000/leagues/${id}`);
+            })
             .then(() => {
               this.leagues = this.leagues.filter(league => league._id !== id);
+              alert('League and associated events updated successfully.');
             })
             .catch(error => {
-              console.error('Error deleting league:', error);
+              console.error('Error updating events or deleting league:', error);
             });
       }
     },
