@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Home from '@/views/Home.vue';
-import EventList from '@/components/EventList.vue';
-import LeagueList from '@/components/LeagueList.vue';
-import EventForm from '@/components/EventForm.vue';
-import LeagueForm from '@/components/LeagueForm.vue';
-import EventDetails from '@/components/EventDetails.vue';
-import LoginForm from "@/components/LoginForm.vue";
-import LeagueDetails from "@/components/LeagueDetails.vue";
+import EventList from '@/views/EventList.vue';
+import LeagueList from '@/views/LeagueList.vue';
+import EventForm from '@/views/EventForm.vue';
+import LeagueForm from '@/views/LeagueForm.vue';
+import EventDetails from '@/views/EventDetails.vue';
+import LoginForm from "@/views/LoginForm.vue";
+import LeagueDetails from "@/views/LeagueDetails.vue";
 
 // Define routes
 const routes = [

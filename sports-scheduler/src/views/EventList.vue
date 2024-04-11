@@ -16,10 +16,10 @@
         </select>
       </div>
       <div class="col-auto">
-        <input type="text" class="form-control form-control" v-model="filterByLeague" placeholder="Filter by League">
+        <input type="text" class="form-control" v-model="filterByLeague" placeholder="Filter by League">
       </div>
       <div class="col-auto">
-        <input type="text" class="form-control form-control" v-model="filterByTitle" placeholder="Filter by Title">
+        <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title">
       </div>
       <div class="col-auto">
         <button @click="openForm()" class="btn btn-success btn">Add Event</button>
@@ -140,7 +140,7 @@ export default {
     sortedEvents() {
       return this.events
           .filter(event => {
-            return !(this.filterByTitle && event.title !== this.filterByTitle);
+            return (!this.filterByTitle|| event.title.toLowerCase().includes(this.filterByTitle.toLowerCase()))
           })
           .filter(event => {
             return !(this.filterByLeague && event.league !== this.filterByLeague);

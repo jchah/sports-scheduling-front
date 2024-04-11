@@ -28,7 +28,7 @@
       </div>
       <div class="form-group">
         <label for="eventLeague">League:</label>
-        <select id="eventLeague" v-model="event.league">
+        <select id="eventLeague" v-model="event.league" class="form-select">
           <option disabled value="">Select a League</option>
           <option v-for="league in leagues" :key="league._id" :value="league.name">
             {{ league.name }}

@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
               <label for="leagueSport">Sport:</label>
-              <select id="leagueSport" v-model="league.sport" required>
+              <select id="leagueSport" v-model="league.sport" class="form-select" required>
                 <option disabled value="">Please select one</option>
                 <option value="American Football">American Football</option>
                 <option value="Badminton">Badminton</option>
@@ -42,7 +42,7 @@
             </div>
             <div class="form-group">
               <label for="leagueDivision">Division:</label>
-              <select id="leagueDivision" v-model="league.division" required>
+              <select id="leagueDivision" v-model="league.division" class="form-select" required>
                 <option value="">Select Division</option>
                 <option value="1">D1</option>
                 <option value="2">D2</option>
