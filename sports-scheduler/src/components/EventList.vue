@@ -44,7 +44,19 @@
             <td>{{ event.title }}</td>
             <td>{{ new Date(event.startTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
             <td>{{ new Date(event.endTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
-            <td>{{ event.location }}</td>
+            <td>
+              <a href="#" @click="toggleMap(event)">{{ event.location }}</a>
+              <div class="map-container" v-if="event.showMap">
+                <iframe
+                    width="300"
+                    height="200"
+                    style="border:0"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    :src="`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(event.location)}`"
+                    allowfullscreen>
+                </iframe>
+              </div>
+            </td>
             <td>
               <div class="btn-group btn-group-sm" role="group" aria-label="Event Actions">
                 <button @click="viewDetails(event._id)" class="btn btn-primary">View</button>
@@ -98,6 +110,7 @@ export default {
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByLeague: '',
       filterByTitle: '',
+      apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4jAh-yRk' // Ensure you replace this with your actual API key or load it securely
     };
   },
   watch: {
@@ -164,7 +177,6 @@ export default {
   methods: {
     goToPage() {
       const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
-
       if (!isNaN(pageNumber) && pageNumber !== this.currentPage) {
         this.changePage(pageNumber);
         this.jumpToPage = null;
@@ -176,7 +188,10 @@ export default {
     fetchEvents() {
       axios.get('http://localhost:3000/events')
           .then(response => {
-            this.events = response.data;
+            this.events = response.data.map(event => ({
+              ...event,
+              showMap: false // Initialize all events with showMap as false
+            }));
             this.updatePageOnFetch();
           })
           .catch(error => {
@@ -211,6 +226,9 @@ export default {
     changePage(page) {
       this.currentPage = Math.max(1, Math.min(page, this.totalPages));
       this.$router.push({ name: 'EventList', params: { page: this.currentPage } });
+    },
+    toggleMap(event) {
+      event.showMap = !event.showMap; // Toggle the showMap property
     }
   }
 }
@@ -230,5 +248,9 @@ export default {
 .table td {
   word-wrap: break-word;
   white-space: pre-wrap;
+}
+
+.map-container {
+  margin-top: 10px;
 }
 </style>
