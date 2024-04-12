@@ -1,21 +1,21 @@
 <template>
   <div class="container mt-4">
-    <div class="row mb-3 align-items-center">
-      <div class="col-auto">
-        <select class="form-select" v-model="sortKey">
+    <div class="row mb-3">
+      <div class="col-lg-2 col-md-4 mb-2">
+        <select class="form-select" v-model="sortKey" aria-label="Sort by">
           <option value="">Select Sort Option</option>
           <option value="alphabetical">Alphabetical</option>
           <option value="division">Division</option>
         </select>
       </div>
-      <div class="col-auto">
-        <select class="form-select" v-model="sortOrder">
+      <div class="col-lg-2 col-md-4 mb-2">
+        <select class="form-select" v-model="sortOrder" aria-label="Order by">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
       </div>
-      <div class="col-auto">
-        <select class="form-select" v-model="filterBySport">
+      <div class="col-lg-3 col-md-4 mb-2">
+        <select class="form-select" v-model="filterBySport" aria-label="Filter by Sport">
           <option value="">Select Sport</option>
           <option value="American Football">American Football</option>
           <option value="Badminton">Badminton</option>
@@ -40,18 +40,19 @@
           <option value="Volleyball">Volleyball</option>
         </select>
       </div>
-      <div class="col-auto">
-        <input type="text" class="form-control" v-model="filterByName" placeholder="Filter by League Name">
+      <div class="col-lg-3 col-md-4 mb-2">
+        <input type="text" class="form-control" v-model="filterByName" placeholder="Filter by League Name" aria-label="Filter by League Name">
       </div>
-      <div class="col-auto">
+      <div class="col-lg-2 col-md-4 mb-2">
         <button @click="openForm()" class="btn btn-success">Add League</button>
       </div>
     </div>
+
     <h2>Leagues</h2>
     <div v-if="paginatedLeagues.length">
       <div class="table-responsive">
-        <table class="table">
-          <thead>
+        <table class="table table-striped">
+          <thead class="table-light">
           <tr>
             <th scope="col">League Name</th>
             <th scope="col">Division</th>
@@ -63,14 +64,16 @@
             <td>{{ league.name }}</td>
             <td>{{ league.division }}</td>
             <td>
-              <button @click="viewLeagueDetails(league._id, this.currentPage)" class="btn btn-primary btn-sm">View</button>
-              <button @click="deleteLeague(league._id, league.name)" class="btn btn-danger btn-sm">Delete</button>
+              <div class="btn-group btn-group-sm" role="group" aria-label="League Actions">
+                <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View</button>
+                <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete</button>
+              </div>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <nav aria-label="Page navigation">
+      <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
@@ -81,15 +84,11 @@
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
           </li>
-          <li class="page-item ml1">
-            <div class="input-group">
-              <input type="number" class="form-control form-control-sm" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button" @click="goToPage">Go</button>
-              </div>
-            </div>
-          </li>
         </ul>
+        <div class="input-group ml-auto w-auto mb-3">
+          <input type="number" class="form-control" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
+          <button class="btn btn-outline-primary" type="button" @click="goToPage">Go</button>
+        </div>
       </nav>
     </div>
     <div v-else>
@@ -97,6 +96,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -238,20 +239,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-.ml1 {
-  margin-left: 1rem;
-}
-@media (max-width: 768px) {
-  .sort-controls select, .sort-controls input {
-    margin-bottom: 10px;
-  }
-}
-
-.table td {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}
-</style>

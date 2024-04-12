@@ -1,19 +1,31 @@
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="credentials.username" required>
-      </div>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-center">Login</h2>
+          </div>
+          <div class="card-body">
+            <form @submit.prevent="login">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="username" v-model="credentials.username" required>
+              </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="credentials.password" required>
-      </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="password" v-model="credentials.password" required>
+              </div>
 
-      <button type="submit">Login</button>
-    </form>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-success">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,40 +70,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.login-container {
-  max-width: 300px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #5cb85c;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-</style>

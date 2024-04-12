@@ -1,81 +1,88 @@
 <template>
-  <div class="container">
+  <div class="container mt-4">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="league-form">
-          <h2>{{ formTitle }}</h2>
-          <form @submit.prevent="submitForm">
-            <div class="form-group">
-              <label for="leagueName">League Name (max 20 chars):</label>
-              <input type="text" id="leagueName" v-model="league.name" @input="checkInput" maxlength=20 required>
-            </div>
-            <div class="form-group">
-              <label for="leagueSport">Sport:</label>
-              <select id="leagueSport" v-model="league.sport" class="form-select" required>
-                <option disabled value="">Please select one</option>
-                <option value="American Football">American Football</option>
-                <option value="Badminton">Badminton</option>
-                <option value="Baseball">Baseball</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Bowling">Bowling</option>
-                <option value="Boxing">Boxing</option>
-                <option value="Chess">Chess</option>
-                <option value="Cricket">Cricket</option>
-                <option value="Cycling">Cycling</option>
-                <option value="Equestrian">Equestrian</option>
-                <option value="Golf">Golf</option>
-                <option value="Gymnastics">Gymnastics</option>
-                <option value="Hockey">Hockey</option>
-                <option value="Martial Arts">Martial Arts</option>
-                <option value="Rugby">Rugby</option>
-                <option value="Soccer">Soccer</option>
-                <option value="Swimming">Swimming</option>
-                <option value="Table Tennis">Table Tennis</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Track and Field">Track and Field</option>
-                <option value="Volleyball">Volleyball</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="leagueTeams">Teams (comma-separated, max 300 chars):</label>
-              <input type="text" id="leagueTeams" v-model="league.teams" @input="checkInput" maxlength=300>
-            </div>
-            <div class="form-group">
-              <label for="leagueDivision">Division:</label>
-              <select id="leagueDivision" v-model="league.division" class="form-select" required>
-                <option value="">Select Division</option>
-                <option value="1">D1</option>
-                <option value="2">D2</option>
-                <option value="3">D3</option>
-                <option value="N/A">N/A</option>
-              </select>
-            </div>
-            <div class="btn-container">
-              <button type="submit" class="btn btn-success mt">Update League</button>
-              <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary back">
-                <slot>← Go back</slot>
-              </button>
-            </div>
-          </form>
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h2>{{ formTitle }}</h2>
+          </div>
+          <div class="card-body">
+            <form @submit.prevent="submitForm">
+              <div class="mb-3">
+                <label for="leagueName" class="form-label">League Name (max 20 chars):</label>
+                <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="20" required>
+              </div>
+              <div class="mb-3">
+                <label for="leagueSport" class="form-label">Sport:</label>
+                <select id="leagueSport" class="form-select" v-model="league.sport" required>
+                  <option disabled value="">Please select one</option>
+                  <option value="American Football">American Football</option>
+                  <option value="Badminton">Badminton</option>
+                  <option value="Baseball">Baseball</option>
+                  <option value="Basketball">Basketball</option>
+                  <option value="Bowling">Bowling</option>
+                  <option value="Boxing">Boxing</option>
+                  <option value="Chess">Chess</option>
+                  <option value="Cricket">Cricket</option>
+                  <option value="Cycling">Cycling</option>
+                  <option value="Equestrian">Equestrian</option>
+                  <option value="Golf">Golf</option>
+                  <option value="Gymnastics">Gymnastics</option>
+                  <option value="Hockey">Hockey</option>
+                  <option value="Martial Arts">Martial Arts</option>
+                  <option value="Rugby">Rugby</option>
+                  <option value="Soccer">Soccer</option>
+                  <option value="Swimming">Swimming</option>
+                  <option value="Table Tennis">Table Tennis</option>
+                  <option value="Tennis">Tennis</option>
+                  <option value="Track and Field">Track and Field</option>
+                  <option value="Volleyball">Volleyball</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="leagueTeams" class="form-label">Teams (comma-separated, max 300 chars):</label>
+                <input type="text" class="form-control" id="leagueTeams" v-model="league.teams" @input="checkInput" maxlength="300">
+              </div>
+              <div class="mb-3">
+                <label for="leagueDivision" class="form-label">Division:</label>
+                <select id="leagueDivision" class="form-select" v-model="league.division" required>
+                  <option value="">Select Division</option>
+                  <option value="1">D1</option>
+                  <option value="2">D2</option>
+                  <option value="3">D3</option>
+                  <option value="N/A">N/A</option>
+                </select>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">Update League</button>
+                <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
+                  ← Go back
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="upcoming-events">
-          <h3>Upcoming Events</h3>
-          <b v-if="upcomingEvents.length === 0">
-            No upcoming events. Check back later!
-          </b>
-          <ul>
-            <li v-for="(event, index) in upcomingEvents" :key="index">
-              {{ new Date(event.startTime).toLocaleDateString() }} - {{ event.title }}
-            </li>
-          </ul>
+        <div class="card">
+          <div class="card-header bg-light">
+            <h3>Upcoming Events</h3>
+          </div>
+          <div class="card-body overflow-auto" style="max-height: 300px;">
+            <b v-if="upcomingEvents.length === 0">
+              No upcoming events. Check back later!
+            </b>
+            <ul class="list-unstyled">
+              <li v-for="(event, index) in upcomingEvents" :key="index">
+                {{ new Date(event.startTime).toLocaleDateString() }} - {{ event.title }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -192,38 +199,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.back {
-  padding: 10px 15px;
-  cursor: pointer;
-  margin-top: 1.5rem;
-}
-
-.mt {
-  margin-top: 1.5rem;
-}
-@media (min-width: 1024px) {
-  .league-form, .upcoming-events {
-    flex-basis: calc(50% - 10px);
-  }
-}
-
-.league-form, .upcoming-events{
-  max-width: 500px;
-  max-height: 500px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.upcoming-events {
-  overflow-y: auto;
-}
-
-</style>

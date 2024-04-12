@@ -1,36 +1,36 @@
 <template>
   <div class="container mt-4">
-    <div class="row mb-3 align-items-center">
-      <div class="col-auto">
-        <select class="form-select form-select" v-model="sortKey">
+    <div class="row mb-3">
+      <div class="col-lg-2 col-md-4 mb-2">
+        <select class="form-select" v-model="sortKey" aria-label="Sort by">
           <option value="">Select Sort Option</option>
           <option value="date">Date</option>
           <option value="league">League</option>
           <option value="alphabet">Alphabetical</option>
         </select>
       </div>
-      <div class="col-auto">
-        <select class="form-select form-select" v-model="sortOrder">
+      <div class="col-lg-2 col-md-4 mb-2">
+        <select class="form-select" v-model="sortOrder" aria-label="Order by">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
       </div>
-      <div class="col-auto">
-        <input type="text" class="form-control" v-model="filterByLeague" placeholder="Filter by League">
+      <div class="col-lg-3 col-md-4 mb-2">
+        <input type="text" class="form-control" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
       </div>
-      <div class="col-auto">
-        <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title">
+      <div class="col-lg-3 col-md-4 mb-2">
+        <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
       </div>
-      <div class="col-auto">
-        <button @click="openForm()" class="btn btn-success btn">Add Event</button>
+      <div class="col-lg-2 col-md-4 mb-2">
+        <button @click="openForm()" class="btn btn-success">Add Event</button>
       </div>
     </div>
 
     <h2>Upcoming Events</h2>
     <div v-if="paginatedEvents.length">
       <div class="table-responsive">
-        <table class="table">
-          <thead>
+        <table class="table table-striped">
+          <thead class="table-light">
           <tr>
             <th scope="col">Event Title</th>
             <th scope="col">Start Time</th>
@@ -46,9 +46,9 @@
             <td>{{ new Date(event.endTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
             <td>
               <a href="#" @click="toggleMap(event)">{{ event.location }}</a>
-              <div class="map-container" v-if="event.showMap">
+              <div v-if="event.showMap" class="map-container">
                 <iframe
-                    width="300"
+                    width="100%"
                     height="200"
                     style="border:0"
                     referrerpolicy="no-referrer-when-downgrade"
@@ -59,15 +59,15 @@
             </td>
             <td>
               <div class="btn-group btn-group-sm" role="group" aria-label="Event Actions">
-                <button @click="viewDetails(event._id)" class="btn btn-primary">View</button>
-                <button @click="deleteEvent(event._id)" class="btn btn-danger">Delete</button>
+                <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
+                <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
               </div>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <nav aria-label="Page navigation">
+      <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
@@ -78,15 +78,15 @@
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
             <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
           </li>
-          <li class="page-item ml1">
-            <div class="input-group">
-              <input type="number" class="form-control form-control-sm" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button" @click="goToPage">Go</button>
-              </div>
-            </div>
-          </li>
         </ul>
+
+
+        <div class="ml-3">
+          <div class="input-group input-group mb-3">
+            <input type="number" class="form-control" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
+            <button class="btn btn-outline-primary" type="button" @click="goToPage">Go</button>
+          </div>
+        </div>
       </nav>
     </div>
     <div v-else>
@@ -94,6 +94,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -233,24 +234,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.ml1 {
-  margin-left: 1rem;
-}
-
-@media (max-width: 768px) {
-  .sort-controls select, .sort-controls input {
-    margin-bottom: 10px;
-  }
-}
-
-.table td {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}
-
-.map-container {
-  margin-top: 10px;
-}
-</style>

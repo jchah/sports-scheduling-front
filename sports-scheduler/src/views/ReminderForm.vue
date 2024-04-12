@@ -1,97 +1,100 @@
 <template>
-  <div class="reminder-form">
-    <h2>Set Reminder</h2>
-    <form @submit.prevent="setReminder">
-      <div class="form-group">
-        <label for="eventSelect">Select Event:</label>
-        <select id="eventSelect" v-model="reminder.eventId" required>
-          <option disabled value="">Please select one</option>
-          <option v-for="event in events" :key="event.id" :value="event.id">
-            {{ event.name }}
-          </option>
-        </select>
+  <div class="reminder-form container mt-5">
+    <div class="row">
+      <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">Set Reminder for Event</h2>
+            <form @submit.prevent="setReminder">
+              <div class="mb-3">
+                <label for="eventSelect" class="form-label">Select Event:</label>
+                <select class="form-select" id="eventSelect" v-model="reminder.eventId" required>
+                  <option disabled value="">Please select an event</option>
+                  <option v-for="event in this.events" :key="event._id" :value="event._id">
+                    {{ event.title }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="reminderDate" class="form-label">Reminder Date:</label>
+                <input type="datetime-local" class="form-control" id="reminderDate" v-model="reminder.reminderDate" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="emailTo" class="form-label">Recipient Email:</label>
+                <input type="email" class="form-control" id="emailTo" v-model="reminder.emailTo" required placeholder="Enter recipient's email">
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Set Reminder</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="reminderDate">Reminder Date:</label>
-        <input type="date" id="reminderDate" v-model="reminder.date" required>
-      </div>
-      <div class="form-group">
-        <label for="reminderTime">Reminder Time:</label>
-        <input type="time" id="reminderTime" v-model="reminder.time" required>
-      </div>
-      <div class="form-group">
-        <label for="reminderMessage">Message (Optional):</label>
-        <textarea id="reminderMessage" v-model="reminder.message"></textarea>
-      </div>
-      <button type="submit">Set Reminder</button>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'ReminderForm',
   data() {
     return {
       reminder: {
         eventId: '',
-        date: '',
-        time: '',
-        message: ''
+        reminderDate: '',
+        emailTo: '',
       },
-      events: [
-        { id: 1, name: 'Event 1' },
-        { id: 2, name: 'Event 2' }
-        // More events...
-      ]
+      events: []
     };
   },
   methods: {
-    setReminder() {
-      // Logic to handle reminder setting
-      // This could involve saving the reminder to a backend server or local storage
-      console.log('Setting reminder:', this.reminder);
-      // Provide feedback to the user, such as a success message
-      // Should probably have some place to find reminders
+    async setReminder() {
+      const selectedEvent = this.events.find(event => event._id === this.reminder.eventId);
+      const reminderDate = new Date(this.reminder.reminderDate).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const emailData = {
+        to: this.reminder.emailTo,
+        subject: `Reminder for ${selectedEvent.title}`,
+        body: `Don't forget about the event "${selectedEvent.title}" on ${reminderDate}.`,
+        sendAt: this.reminder.reminderDate,
+      };
+
+      console.log('Sending email data to backend:', emailData);
+
+      try {
+        const response = await axios.post('http://localhost:3000/schedule-email', emailData);
+        if (response.status === 200) {
+          alert('Reminder email scheduled successfully!');
+        } else {
+          console.error('Failed to schedule reminder email:', response);
+        }
+      } catch (error) {
+        console.error('Error scheduling reminder email:', error);
+      }
+
+      // Reset the reminder form fields
+      this.reminder = {
+        eventId: '',
+        reminderDate: '',
+        emailTo: '',
+      };
+    },
+    async fetchEvents() {
+      await axios.get(`http://localhost:3000/events/`)
+          .then(response => {
+            this.events = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching events:', error);
+          });
     }
+  },
+  created() {
+    this.fetchEvents();
   }
 }
 </script>
-
-<style scoped>
-.reminder-form {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background: #f0f0f0;
-  border-radius: 8px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-button {
-  display: block;
-  padding: 10px 15px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  width: 100%;
-}
-</style>

@@ -1,47 +1,49 @@
 <template>
-  <div class="event-form">
-    <h2>{{ formTitle }}</h2>
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="eventTitle">Event Title (max 50 chars):</label>
-        <input type="text" id="eventTitle" v-model="event.title" @input="checkInput" maxlength=50 required>
-      </div>
-      <div class="form-group">
-        <label for="eventDescription">Description (max 300 chars):</label>
-        <textarea id="eventDescription" v-model="event.description" @input="checkInput" maxlength=300 required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="eventStartTime">Start Time:</label>
-        <input type="datetime-local" id="eventStartTime" v-model="event.startTime" required>
-      </div>
-      <div class="form-group">
-        <label for="eventEndTime">End Time:</label>
-        <input type="datetime-local" id="eventEndTime" v-model="event.endTime" required>
-      </div>
-      <div class="form-group">
-        <label for="eventLocation">Location (max 100 chars):</label>
-        <input type="text" id="eventLocation" v-model="event.location" @input="checkInput" maxlength=100 required>
-      </div>
-      <div class="form-group">
-        <label for="eventTeams">Teams (comma-separated, max 200 chars):</label>
-        <input type="text" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength=200 required>
-      </div>
-      <div class="form-group">
-        <label for="eventLeague">League:</label>
-        <select id="eventLeague" v-model="event.league" class="form-select">
-          <option disabled value="">Select a League</option>
-          <option v-for="league in leagues" :key="league._id" :value="league.name">
-            {{ league.name }}
-          </option>
-        </select>
-      </div>
-      <div class="btn-container">
-        <button type="submit" class="btn btn-success mt">Update Event</button>
-        <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary back">
-          <slot>← Go back</slot>
-        </button>
-      </div>
-    </form>
+  <div class="container mt-5">
+    <div class="event-form bg-light p-4 shadow rounded " style="max-width: 500px; margin: auto;">
+      <h2 class="text-center mb-4 bg-primary text-white p-2 rounded">{{ formTitle }}</h2>
+      <form @submit.prevent="submitForm">
+        <div class="form-group mb-3">
+          <label for="eventTitle" class="form-label">Event Title (max 50 chars):</label>
+          <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="50" required>
+        </div>
+        <div class="form-group mb-3">
+          <label for="eventDescription" class="form-label">Description (max 300 chars):</label>
+          <textarea class="form-control" id="eventDescription" v-model="event.description" @input="checkInput" maxlength="300" required></textarea>
+        </div>
+        <div class="form-group mb-3">
+          <label for="eventStartTime" class="form-label">Start Time:</label>
+          <input type="datetime-local" class="form-control" id="eventStartTime" v-model="event.startTime" required>
+        </div>
+        <div class="form-group mb-3">
+          <label for="eventEndTime" class="form-label">End Time:</label>
+          <input type="datetime-local" class="form-control" id="eventEndTime" v-model="event.endTime" required>
+        </div>
+        <div class="form-group mb-3">
+          <label for="eventLocation" class="form-label">Location (max 100 chars):</label>
+          <input type="text" class="form-control" id="eventLocation" v-model="event.location" @input="checkInput" maxlength="100" required>
+        </div>
+        <div class="form-group mb-4">
+          <label for="eventTeams" class="form-label">Teams (comma-separated, max 200 chars):</label>
+          <input type="text" class="form-control" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength="200" required>
+        </div>
+        <div class="form-group mb-4">
+          <label for="eventLeague" class="form-label">League:</label>
+          <select id="eventLeague" class="form-select" v-model="event.league">
+            <option disabled value="">Select a League</option>
+            <option v-for="league in leagues" :key="league._id" :value="league.name">
+              {{ league.name }}
+            </option>
+          </select>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">Update Event</button>
+          <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
+            ← Go back
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -126,64 +128,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.btn-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.event-form {
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group label {
-  margin-bottom: 5px;
-  display: block;
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-group textarea {
-  height: 100px;
-}
-
-button[type="submit"] {
-  padding: 10px 15px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-  background-color: #45a049;
-}
-
-@media (max-width: 768px) {
-  .event-form {
-    width: 90%;
-    margin: 10px auto;
-    padding: 15px;
-  }
-}
-</style>

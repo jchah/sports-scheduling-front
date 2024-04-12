@@ -16,6 +16,9 @@
           <li class="nav-item">
             <router-link to="/leagues/pg/1" class="nav-link" exact-active-class="active">Leagues</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/reminder" class="nav-link" exact-active-class="active">Reminders</router-link>
+          </li>
         </ul>
         <!-- Conditional rendering for login/logout -->
         <ul class="navbar-nav">

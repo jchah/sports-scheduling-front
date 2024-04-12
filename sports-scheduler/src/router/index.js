@@ -8,6 +8,7 @@ import LeagueForm from '@/views/LeagueForm.vue';
 import EventDetails from '@/views/EventDetails.vue';
 import LoginForm from "@/views/LoginForm.vue";
 import LeagueDetails from "@/views/LeagueDetails.vue";
+import ReminderForm from "@/views/ReminderForm.vue";
 
 // Define routes
 const routes = [
@@ -52,6 +53,11 @@ const routes = [
     path: '/login',
     name: 'LoginForm',
     component: LoginForm
+  },
+  {
+    path: '/reminder',
+    name: 'ReminderForm',
+    component: ReminderForm
   }
 ];
 
