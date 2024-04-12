@@ -22,7 +22,7 @@
         <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <button @click="openForm()" class="btn btn-success">Add Event</button>
+        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Add Event</button>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
             <td>
               <div class="btn-group btn-group-sm" role="group" aria-label="Event Actions">
                 <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
-                <button @click="deleteEvent(event._id)" class="btn btn-danger btn-sm">Delete</button>
+                <button @click="deleteEvent(event._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
               </div>
             </td>
           </tr>
@@ -111,7 +111,8 @@ export default {
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByLeague: '',
       filterByTitle: '',
-      apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4jAh-yRk' // Ensure you replace this with your actual API key or load it securely
+      apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4Ah-yRk',
+      admin: false
     };
   },
   watch: {
@@ -171,11 +172,15 @@ export default {
     }
   },
   created() {
+    this.checkPermissions();
     const page = parseInt(this.$route.params.page, 10) || 1;
     this.currentPage = Math.max(1, Math.min(page, this.totalPages));
     this.fetchEvents();
   },
   methods: {
+    checkPermissions() {
+      this.admin = localStorage.getItem('role') === 'admin';
+    },
     goToPage() {
       const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
       if (!isNaN(pageNumber) && pageNumber !== this.currentPage) {
@@ -191,7 +196,7 @@ export default {
           .then(response => {
             this.events = response.data.map(event => ({
               ...event,
-              showMap: false // Initialize all events with showMap as false
+              showMap: false
             }));
             this.updatePageOnFetch();
           })
@@ -229,7 +234,7 @@ export default {
       this.$router.push({ name: 'EventList', params: { page: this.currentPage } });
     },
     toggleMap(event) {
-      event.showMap = !event.showMap; // Toggle the showMap property
+      event.showMap = !event.showMap;
     }
   }
 }

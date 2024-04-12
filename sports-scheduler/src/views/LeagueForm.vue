@@ -126,7 +126,7 @@ export default {
       }
     },
     clearForm() {
-      this.league = { name: '', sport: '', division: '' }; // Reset form fields
+      this.league = { name: '', sport: '', division: '' };
       this.teamNames = '';
     },
     fetchLeagues() {

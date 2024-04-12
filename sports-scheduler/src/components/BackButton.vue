@@ -1,3 +1,4 @@
+<!-- Doesn't work on some of the forms, -->
 <template>
   <button @click="goBack" class="btn btn-secondary">
     <slot>← Go back</slot>

@@ -20,13 +20,19 @@
             <router-link to="/reminder" class="nav-link" exact-active-class="active">Reminders</router-link>
           </li>
         </ul>
-        <!-- Conditional rendering for login/logout -->
-        <ul class="navbar-nav">
-          <li class="nav-item" v-if="!isLoggedIn">
-            <router-link to="/login" class="nav-link" exact-active-class="active">Login</router-link>
+        <ul class="navbar-nav ml-auto">
+          <li v-if="isLoggedIn" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Logged in as: {{ username }}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Role: {{ role }}</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+            </ul>
           </li>
-          <li class="nav-item" v-else>
-            <button class="btn btn-outline-success" @click="logout">Logout</button>
+          <li v-else class="nav-item">
+            <router-link to="/login" class="nav-link">Login</router-link>
           </li>
         </ul>
       </div>
@@ -35,17 +41,42 @@
 </template>
 
 <script>
+import { EventBus } from '@/eventBus';
 export default {
   name: 'AppNavbar',
   data() {
     return {
-      isLoggedIn: false,
+      username: localStorage.getItem('username'),
+      role: localStorage.getItem('userRole'),
+      isLoggedIn: !!localStorage.getItem('authToken'),
     };
   },
-  methods: {
-    logout() {
-      console.log('Logging out...');
-    },
+  created() {
+    EventBus.$on('auth-change', this.updateAuthStatus);
   },
+  unmounted() {
+    EventBus.$off('auth-change', this.updateAuthStatus);
+  },
+  methods: {
+    updateAuthStatus() {
+      this.username = localStorage.getItem('username');
+      this.role = localStorage.getItem('userRole');
+      this.isLoggedIn = !!localStorage.getItem('authToken');
+      console.log('Auth status updated:', this.isLoggedIn);
+    },
+    logout() {
+      localStorage.removeItem('username');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('authToken');
+      EventBus.$emit('auth-change');
+      this.$router.push('/login');
+    }
+  },
+  watch: {
+    '$route'() {
+      this.username = localStorage.getItem('username');
+      this.role = localStorage.getItem('userRole');
+    }
+  }
 };
 </script>

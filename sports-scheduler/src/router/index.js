@@ -9,8 +9,8 @@ import EventDetails from '@/views/EventDetails.vue';
 import LoginForm from "@/views/LoginForm.vue";
 import LeagueDetails from "@/views/LeagueDetails.vue";
 import ReminderForm from "@/views/ReminderForm.vue";
+import AccountForm from '@/views/AccountForm.vue';
 
-// Define routes
 const routes = [
   {
     path: '/',
@@ -20,7 +20,15 @@ const routes = [
   {
     path: '/events/new',
     name: 'NewEvent',
-    component: EventForm
+    component: EventForm,
+    beforeEnter: (to, from, next) => {
+      if (!(localStorage.getItem('role') === 'admin')) {
+        alert('You do not have permission to add new events.');
+        next(false);
+      } else {
+        next();
+      }
+    }
   },
   {
     path: '/events/:id',
@@ -36,7 +44,15 @@ const routes = [
   {
     path: '/leagues/new',
     name: 'NewLeague',
-    component: LeagueForm
+    component: LeagueForm,
+    beforeEnter: (to, from, next) => {
+      if (!(localStorage.getItem('role') === 'admin')) {
+        alert('You do not have permission to add new events.');
+        next(false);
+      } else {
+        next();
+      }
+    }
   },
   {
     path: '/leagues/:id',
@@ -58,12 +74,30 @@ const routes = [
     path: '/reminder',
     name: 'ReminderForm',
     component: ReminderForm
-  }
+  },
+  {
+    path: '/create-account',
+    name: 'AccountForm',
+    component: AccountForm
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+// Navigation Guard
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login', '/create-account'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('authToken');
+
+  if (authRequired && !loggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;

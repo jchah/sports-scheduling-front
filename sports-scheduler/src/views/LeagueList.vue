@@ -44,7 +44,7 @@
         <input type="text" class="form-control" v-model="filterByName" placeholder="Filter by League Name" aria-label="Filter by League Name">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <button @click="openForm()" class="btn btn-success">Add League</button>
+        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Add League</button>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
             <td>
               <div class="btn-group btn-group-sm" role="group" aria-label="League Actions">
                 <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View</button>
-                <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete</button>
+                <button @click="deleteEvent(event._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
               </div>
             </td>
           </tr>
@@ -114,6 +114,7 @@ export default {
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByName: '',
       filterBySport: '',
+      admin: false
     };
   },
   watch: {
@@ -164,11 +165,15 @@ export default {
     }
   },
   created() {
+    this.checkPermissions();
     const page = parseInt(this.$route.params.page, 10) || 1;
     this.currentPage = Math.max(1, Math.min(page, this.totalPages));
     this.fetchLeagues();
   },
   methods: {
+    checkPermissions() {
+      this.admin = localStorage.getItem('role') === 'admin';
+    },
     goToPage() {
       const pageNumber = Math.max(1, Math.min(this.totalPages, Number(this.jumpToPage)));
 

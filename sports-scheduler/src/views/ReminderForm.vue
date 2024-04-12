@@ -76,7 +76,6 @@ export default {
         console.error('Error scheduling reminder email:', error);
       }
 
-      // Reset the reminder form fields
       this.reminder = {
         eventId: '',
         reminderDate: '',

@@ -10,11 +10,11 @@
             <form @submit.prevent="submitForm">
               <div class="mb-3">
                 <label for="leagueName" class="form-label">League Name (max 20 chars):</label>
-                <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="20" required>
+                <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="20" required :disabled="!admin">
               </div>
               <div class="mb-3">
                 <label for="leagueSport" class="form-label">Sport:</label>
-                <select id="leagueSport" class="form-select" v-model="league.sport" required>
+                <select id="leagueSport" class="form-select" v-model="league.sport" required :disabled="!admin">
                   <option disabled value="">Please select one</option>
                   <option value="American Football">American Football</option>
                   <option value="Badminton">Badminton</option>
@@ -41,11 +41,11 @@
               </div>
               <div class="mb-3">
                 <label for="leagueTeams" class="form-label">Teams (comma-separated, max 300 chars):</label>
-                <input type="text" class="form-control" id="leagueTeams" v-model="league.teams" @input="checkInput" maxlength="300">
+                <input type="text" class="form-control" id="leagueTeams" v-model="league.teams" @input="checkInput" maxlength="300" :disabled="!admin">
               </div>
               <div class="mb-3">
                 <label for="leagueDivision" class="form-label">Division:</label>
-                <select id="leagueDivision" class="form-select" v-model="league.division" required>
+                <select id="leagueDivision" class="form-select" v-model="league.division" required :disabled="!admin">
                   <option value="">Select Division</option>
                   <option value="1">D1</option>
                   <option value="2">D2</option>
@@ -54,7 +54,7 @@
                 </select>
               </div>
               <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-success">Update League</button>
+                <button type="submit" :class="{'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Update League</button>
                 <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
                   ← Go back
                 </button>
@@ -84,6 +84,7 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
 
@@ -100,11 +101,15 @@ export default {
         division: ''
       },
       upcomingEvents: [],
-      leagues: []
+      leagues: [],
+      admin: false
     };
   },
 
   methods: {
+    checkPermissions() {
+      this.admin = localStorage.getItem('role') === 'admin';
+    },
     async updateEventNames() {
       const updatePromises = this.upcomingEvents.map(event => {
         const updatedEvent = { ...event, league: this.league.name };
@@ -147,7 +152,7 @@ export default {
           .catch(error => {
             console.error('Error updating league:', error);
           });
-      this.updateEventNames();
+      await this.updateEventNames();
     },
     fetchLeagues() {
       return axios.get('http://localhost:3000/leagues')
@@ -195,6 +200,7 @@ export default {
     }
   },
   created() {
+    this.checkPermissions();
     this.fetchLeagueDetails();
   }
 }

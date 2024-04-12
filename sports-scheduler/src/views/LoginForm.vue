@@ -9,8 +9,8 @@
           <div class="card-body">
             <form @submit.prevent="login">
               <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" class="form-control" id="username" v-model="credentials.username" required>
+                <label for="username" class="form-label">Username (max 12 chars):</label>
+                <input type="text" class="form-control" id="username" v-model="credentials.username" @input="checkInput" maxlength=12 required>
               </div>
 
               <div class="mb-3">
@@ -18,8 +18,9 @@
                 <input type="password" class="form-control" id="password" v-model="credentials.password" required>
               </div>
 
-              <div class="d-grid">
+              <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success">Login</button>
+                <button type="button" class="btn btn-secondary" @click="navigateToCreateAccount">Create Account</button>
               </div>
             </form>
           </div>
@@ -30,6 +31,8 @@
 </template>
 
 <script>
+import {EventBus} from "@/eventBus.js";
+
 export default {
   name: 'LoginForm',
   data() {
@@ -40,33 +43,54 @@ export default {
       }
     };
   },
-  methods: {
-    async login() {
-      // Here you would handle the login logic, including form validation
-      // and making an API call to authenticate the user.
-      console.log('Logging in with:', this.credentials);
 
-      try {
-        // Replace with actual API call
-        const response = await this.authenticate(this.credentials);
-        if (response.ok) {
-          // Handle successful authentication
-          this.$emit('login-success', response.data);
-          // Redirect to dashboard or previous page
-          this.$router.replace({ name: 'AdminDashboard' });
-        } else {
-          // Handle errors or unsuccessful authentication
-          console.error('Login failed:', response.error);
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
+  methods: {
+    checkInput(event) {
+      const originalText = event.target.value;
+      const regex = /[^a-zA-Z0-9\s.,?!@$&]/g;
+      const filteredText = originalText.replace(regex, '');
+      event.target.value = filteredText;
+
+      if (originalText !== filteredText) {
+        this.event[event.target.id.slice(5).toLowerCase()] = filteredText;
       }
     },
-    authenticate(credentials) {
-      // This method should be replaced with an actual HTTP request to your backend.
-      // The following line is just a placeholder for demonstration purposes.
-      return new Promise((resolve) => setTimeout(() => resolve({ ok: true, data: { user: 'Admin' } }), 1000));
+    navigateToCreateAccount() {
+      this.$router.push({ name: 'AccountForm' });
+      },
+    async login() {
+      try {
+        console.log('Logging in with:', this.credentials);
+        const response = await this.authenticate(this.credentials);
+        console.log("Data received from server:", response);
+        let data = response.data;
+        let user = data.user;
+        let role = data.role;
+
+        console.log(role);
+        await localStorage.setItem('username', user);
+        await localStorage.setItem('role', role);
+        await localStorage.setItem('authToken', 'your_token_here');
+
+        EventBus.$emit('auth-change');
+        this.$router.push('/');
+      } catch (e) {
+        alert("Couldn't log in! Check your info and try again.")
+      }
+      },
+    async authenticate(credentials) {
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(credentials)
+        });
+        return await response.json() ;
+      } catch (error) {
+        console.error('Login API error:', error);
+        return null;
+      }
     }
-  }
-};
+  },
+}
 </script>
