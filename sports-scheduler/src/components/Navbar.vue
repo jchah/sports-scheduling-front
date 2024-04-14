@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       username: localStorage.getItem('username'),
-      role: localStorage.getItem('userRole'),
+      role: localStorage.getItem('role'),
       isLoggedIn: !!localStorage.getItem('authToken'),
     };
   },
@@ -60,13 +60,13 @@ export default {
   methods: {
     updateAuthStatus() {
       this.username = localStorage.getItem('username');
-      this.role = localStorage.getItem('userRole');
+      this.role = localStorage.getItem('role');
       this.isLoggedIn = !!localStorage.getItem('authToken');
       console.log('Auth status updated:', this.isLoggedIn);
     },
     logout() {
       localStorage.removeItem('username');
-      localStorage.removeItem('userRole');
+      localStorage.removeItem('role');
       localStorage.removeItem('authToken');
       EventBus.$emit('auth-change');
       this.$router.push('/login');
@@ -75,7 +75,7 @@ export default {
   watch: {
     '$route'() {
       this.username = localStorage.getItem('username');
-      this.role = localStorage.getItem('userRole');
+      this.role = localStorage.getItem('role');
     }
   }
 };
