@@ -46,7 +46,7 @@
             <td>{{ new Date(event.endTime).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}</td>
             <td>
               <a href="#" @click="toggleMap(event)">{{ event.location }}</a>
-              <div v-if="event.showMap" class="map-container">
+              <div v-if="event.showMap">
                 <iframe
                     width="100%"
                     height="200"

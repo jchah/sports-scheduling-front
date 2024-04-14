@@ -66,7 +66,7 @@
             <td>
               <div class="btn-group btn-group-sm" role="group" aria-label="League Actions">
                 <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View</button>
-                <button @click="deleteEvent(event._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
+                <button @click="deleteLeague(league._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
               </div>
             </td>
           </tr>
