@@ -111,7 +111,7 @@ export default {
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByLeague: '',
       filterByTitle: '',
-      apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4Ah-yRk',
+      apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4jAh-yRk',
       admin: false
     };
   },
