@@ -9,8 +9,8 @@
           <div class="card-body">
             <form @submit.prevent="submitForm">
               <div class="mb-3">
-                <label for="leagueName" class="form-label">League Name (max 20 chars):</label>
-                <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="20" required :disabled="!admin">
+                <label for="leagueName" class="form-label">League Name (max 40 chars):</label>
+                <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="40" required :disabled="!admin">
               </div>
               <div class="mb-3">
                 <label for="leagueSport" class="form-label">Sport:</label>
@@ -38,10 +38,6 @@
                   <option value="Track and Field">Track and Field</option>
                   <option value="Volleyball">Volleyball</option>
                 </select>
-              </div>
-              <div class="mb-3">
-                <label for="leagueTeams" class="form-label">Teams (comma-separated, max 300 chars):</label>
-                <input type="text" class="form-control" id="leagueTeams" v-model="league.teams" @input="checkInput" maxlength="300" :disabled="!admin">
               </div>
               <div class="mb-3">
                 <label for="leagueDivision" class="form-label">Division:</label>
@@ -72,7 +68,7 @@
           <div class="card-header bg-light">
             <h3>Upcoming Events</h3>
           </div>
-          <div class="card-body overflow-auto" style="max-height: 300px;">
+          <div class="card-body overflow-auto" style="max-height: 350px;">
             <b v-if="upcomingEvents.length === 0">
               No upcoming events. Check back later!
             </b>
@@ -101,7 +97,6 @@ export default {
       league: {
         name: '',
         sport: '',
-        teams: [],
         division: ''
       },
       upcomingEvents: [],
@@ -116,33 +111,11 @@ export default {
     checkPermissions() {
       this.admin = localStorage.getItem('role') === 'admin';
     },
-    async updateEventNames() {
-      const updatePromises = this.upcomingEvents.map(event => {
-        const updatedEvent = { ...event, league: this.league.name };
-
-        // Use PUT or PATCH if updating
-        return axios.put(`https://sports-scheduling-8lth.onrender.com/events/${event._id}`, updatedEvent)
-            .then(response => {
-              console.log(`Updated event ${event._id}:`, response.data);
-            })
-            .catch(error => {
-              console.error(`Failed to update event ${event._id}:`, error);
-            });
-      });
-
-      try {
-        await Promise.all(updatePromises);
-        console.log("All event names updated");
-      } catch (error) {
-        console.error("Failed to update event names:", error);
-      }
-    },
 
     async submitForm() {
       await this.fetchLeagues();
       const leagueData = {
-        ...this.league,
-        teams: this.league.teams.map(team => team.trim())
+        ...this.league
       };
       for (let i = 0; i < this.leagues.length; i++) {
         if(this.leagues[i].name === this.league.name) {
@@ -158,7 +131,6 @@ export default {
           .catch(error => {
             console.error('Failed to update league:', error);
           });
-      await this.updateEventNames();
     },
     fetchLeagues() {
       return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
@@ -193,12 +165,8 @@ export default {
       axios.get(`https://sports-scheduling-8lth.onrender.com/events/`)
           .then(response => {
             const events = response.data;
-            console.log(response.data)
-            for (let i = 0; i < events.length; i++) {
-              if (events[i].league === this.league.name) {
-                this.upcomingEvents.push(events[i]);
-              }
-            }
+            this.upcomingEvents = events.filter(event => event.league === this.league.name);
+            console.log(response.data);
           })
           .catch(error => {
             console.error('Failed to fetch events:', error);

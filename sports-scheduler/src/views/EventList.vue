@@ -15,11 +15,14 @@
           <option value="desc">Descending</option>
         </select>
       </div>
-      <div class="col-lg-3 col-md-4 mb-2">
+      <div class="col-lg-2 col-md-4 mb-2">
         <input type="text" class="form-control" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
       </div>
-      <div class="col-lg-3 col-md-4 mb-2">
+      <div class="col-lg-2 col-md-4 mb-2">
         <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
+      </div>
+      <div class="col-lg-2 col-md-4 mb-2">
+        <input type="text" class="form-control" v-model="filterByTeam" placeholder="Show Team A, Team B" aria-label="Filter by Team">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
         <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Add Event</button>
@@ -111,6 +114,7 @@ export default {
       sortOrder: this.$route.query.sortOrder || 'asc',
       filterByLeague: '',
       filterByTitle: '',
+      filterByTeam: '',
       apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4jAh-yRk',
       admin: false
     };
@@ -136,16 +140,22 @@ export default {
     },
     filterByTitle() {
       this.currentPage = 1;
+    },
+    filterByTeam() {
+      this.currentPage = 1;
     }
   },
   computed: {
     sortedEvents() {
       return this.events
+          .filter(event => !this.filterByTitle || event.title.toLowerCase().includes(this.filterByTitle.toLowerCase()))
+          .filter(event => !this.filterByLeague || event.league === this.filterByLeague)
           .filter(event => {
-            return (!this.filterByTitle|| event.title.toLowerCase().includes(this.filterByTitle.toLowerCase()))
-          })
-          .filter(event => {
-            return !(this.filterByLeague && event.league !== this.filterByLeague);
+            if (!this.filterByTeam) return true;  // Skip filtering if no team input
+            const inputTeams = this.filterByTeam.split(',').map(team => team.trim().toLowerCase());
+            return inputTeams.every(inputTeam =>
+                event.teams.some(team => team.toLowerCase().includes(inputTeam))
+            );
           })
           .sort((a, b) => {
             let modifier = 1;

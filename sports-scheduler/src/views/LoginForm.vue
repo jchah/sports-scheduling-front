@@ -71,9 +71,9 @@ export default {
         let role = data.role;
 
         console.log(role);
-        await localStorage.setItem('username', user);
-        await localStorage.setItem('role', role);
-        await localStorage.setItem('authToken', 'your_token_here');
+        localStorage.setItem('username', user);
+        localStorage.setItem('role', role);
+        localStorage.setItem('authToken', 'your_token_here');
 
         EventBus.$emit('auth-change');
         this.$router.push('/');

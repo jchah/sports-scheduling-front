@@ -7,8 +7,8 @@
       <div class="card-body">
         <form @submit.prevent="submitLeague">
           <div class="mb-3">
-            <label for="leagueName" class="form-label">League Name (max 20 chars):</label>
-            <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="20" required>
+            <label for="leagueName" class="form-label">League Name (max 40 chars):</label>
+            <input type="text" class="form-control" id="leagueName" v-model="league.name" @input="checkInput" maxlength="40" required>
           </div>
           <div class="mb-3">
             <label for="leagueSport" class="form-label">Sport:</label>
@@ -47,11 +47,6 @@
               <option value="N/A">N/A</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="leagueTeams" class="form-label">Teams (comma-separated, max 300 chars):</label>
-            <input type="text" class="form-control" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C"
-                   @input="checkInput" maxlength="300">
-          </div>
 
           <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
           <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -66,7 +61,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios';
 import BackButton from '@/components/BackButton.vue';
@@ -80,11 +74,8 @@ export default {
       league: {
         name: '',
         sport: '',
-        teams: [],
         division: '',
       },
-      teamNames: '',
-      leagues: [],
       successMessage: '',
       errorMessage: ''
     };
@@ -93,11 +84,10 @@ export default {
     async submitLeague() {
       await this.fetchLeagues();
       const payload = {
-        ...this.league,
-        teams: this.teamNames.split(',').map(team => team.trim())
+        ...this.league
       };
 
-      console.log("Payload: " + payload);
+      console.log("Payload: " + JSON.stringify(payload));
 
       for (let i = 0; i < this.leagues.length; i++) {
         if (this.leagues[i].name === this.league.name) {
@@ -124,16 +114,11 @@ export default {
       event.target.value = filteredText;
 
       if (originalText !== filteredText) {
-        if(event.target.id === 'leagueTeams') {
-          this.teamNames = filteredText;
-        } else {
-          this.league[event.target.id.slice(6).toLowerCase()] = filteredText;
-        }
+        this.league[event.target.id.slice(6).toLowerCase()] = filteredText;
       }
     },
     clearForm() {
       this.league = { name: '', sport: '', division: '' };
-      this.teamNames = '';
     },
     fetchLeagues() {
       return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
