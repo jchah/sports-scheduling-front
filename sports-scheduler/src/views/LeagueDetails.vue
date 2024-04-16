@@ -53,6 +53,10 @@
                   <option value="N/A">N/A</option>
                 </select>
               </div>
+
+              <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
               <div class="d-flex justify-content-between">
                 <button type="submit" :class="{'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Update League</button>
                 <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
@@ -102,7 +106,9 @@ export default {
       },
       upcomingEvents: [],
       leagues: [],
-      admin: false
+      admin: false,
+      successMessage: '',
+      errorMessage: ''
     };
   },
 
@@ -120,7 +126,7 @@ export default {
               console.log(`Updated event ${event._id}:`, response.data);
             })
             .catch(error => {
-              console.error(`Error updating event ${event._id}:`, error);
+              console.error(`Failed to update event ${event._id}:`, error);
             });
       });
 
@@ -128,7 +134,7 @@ export default {
         await Promise.all(updatePromises);
         console.log("All event names updated");
       } catch (error) {
-        console.error("Error updating event names:", error);
+        console.error("Failed to update event names:", error);
       }
     },
 
@@ -140,17 +146,17 @@ export default {
       };
       for (let i = 0; i < this.leagues.length; i++) {
         if(this.leagues[i].name === this.league.name) {
-          alert("Name " + this.league.name + " already exists!");
+          this.errorMessage = "Name " + this.league.name + " already exists!";
           return;
         }
       }
       await axios.put(`http://localhost:3000/leagues/${this.$route.params.id}`, leagueData)
           .then(response => {
-            alert('League updated successfully');
+            this.successMessage = 'League updated successfully';
             console.log('League updated successfully:', response.data);
           })
           .catch(error => {
-            console.error('Error updating league:', error);
+            console.error('Failed to update league:', error);
           });
       await this.updateEventNames();
     },
@@ -160,7 +166,7 @@ export default {
             this.leagues = response.data;
           })
           .catch(error => {
-            console.error('Error fetching leagues:', error);
+            console.error('Failed to fetch leagues:', error);
           });
     },
     checkInput(event) {
@@ -180,7 +186,7 @@ export default {
             this.fetchEvents();
           })
           .catch(error => {
-            console.error('Error fetching league details:', error);
+            console.error('Failed to fetch league details:', error);
           });
     },
     async fetchEvents() {
@@ -195,7 +201,7 @@ export default {
             }
           })
           .catch(error => {
-            console.error('Error fetching events:', error);
+            console.error('Failed to fetch events:', error);
           });
     }
   },

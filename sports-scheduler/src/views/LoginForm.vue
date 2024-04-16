@@ -9,14 +9,16 @@
           <div class="card-body">
             <form @submit.prevent="login">
               <div class="mb-3">
-                <label for="username" class="form-label">Username (max 12 chars):</label>
-                <input type="text" class="form-control" id="username" v-model="credentials.username" @input="checkInput" maxlength=12 required>
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="username" v-model="credentials.username" @input="checkInput" required>
               </div>
 
               <div class="mb-3">
                 <label for="password" class="form-label">Password:</label>
                 <input type="password" class="form-control" id="password" v-model="credentials.password" required>
               </div>
+
+              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success">Login</button>
@@ -40,7 +42,8 @@ export default {
       credentials: {
         username: '',
         password: ''
-      }
+      },
+      errorMessage: ''
     };
   },
 
@@ -75,7 +78,7 @@ export default {
         EventBus.$emit('auth-change');
         this.$router.push('/');
       } catch (e) {
-        alert("Couldn't log in! Check your info and try again.")
+        this.errorMessage = "Couldn't log in! Check your info and try again.";
       }
       },
     async authenticate(credentials) {

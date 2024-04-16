@@ -9,8 +9,8 @@
           <div class="card-body">
             <form @submit.prevent="createAccount">
               <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" class="form-control" id="username" v-model="account.username" required>
+                <label for="username" class="form-label">Username (max 20 chars):</label>
+                <input type="text" class="form-control" id="username" v-model="account.username" maxlength="20" required>
               </div>
 
               <div class="mb-3">
@@ -25,6 +25,10 @@
                   <option value="admin">Admin</option>
                 </select>
               </div>
+
+              <!-- Success and Error Messages -->
+              <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Create Account</button>
@@ -46,11 +50,15 @@ export default {
         username: '',
         password: '',
         role: 'user'
-      }
+      },
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
     async createAccount() {
+      this.successMessage = '';
+      this.errorMessage = '';
       try {
         const response = await fetch('http://localhost:3000/create-account', {
           method: 'POST',
@@ -58,15 +66,15 @@ export default {
           body: JSON.stringify(this.account)
         });
         if (response.ok) {
-          alert('Account created successfully!');
-          this.$router.push('/login');
+          this.successMessage = 'Account created successfully!';
+          setTimeout(() => this.$router.push('/login'), 3000); // Redirect after 3 seconds
         } else {
           const data = await response.json();
-          alert(data.message);
+          this.errorMessage = data.message || 'Failed to create account.';
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Failed to create account.');
+        this.errorMessage = 'Failed to create account.';
       }
     }
   }

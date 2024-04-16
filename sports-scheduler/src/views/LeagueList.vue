@@ -192,7 +192,7 @@ export default {
             this.updatePageOnFetch();
           })
           .catch(error => {
-            console.error('Error fetching leagues:', error);
+            console.error('Failed to fetch leagues:', error);
           });
     },
     updatePageOnFetch() {
@@ -220,10 +220,9 @@ export default {
             })
             .then(() => {
               this.leagues = this.leagues.filter(league => league._id !== id);
-              alert('League and associated events updated successfully.');
             })
             .catch(error => {
-              console.error('Error updating events or deleting league:', error);
+              console.error('Failed to update events or delete league:', error);
             });
       }
     },

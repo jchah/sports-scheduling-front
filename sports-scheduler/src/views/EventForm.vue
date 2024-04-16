@@ -40,6 +40,9 @@
             </select>
           </div>
 
+          <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+          <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
           <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-success">Update Event</button>
             <BackButton/>
@@ -69,7 +72,9 @@ export default {
         teams: '',
         league: ''
       },
-      leagues: []
+      leagues: [],
+      successMessage: '',
+      errorMessage: ''
     };
   },
   created() {
@@ -82,7 +87,7 @@ export default {
             this.leagues = response.data;
           })
           .catch(error => {
-            console.error('Error fetching leagues:', error);
+            console.error('Failed to fetch leagues:', error);
           });
     },
     submitForm() {
@@ -93,11 +98,12 @@ export default {
 
       axios.post('http://localhost:3000/events', eventData)
           .then(() => {
-            alert('Event added successfully');
+            this.successMessage = 'Event added successfully';
             this.clearForm();
           })
           .catch(error => {
-            console.error('Error adding event:', error);
+            console.error('Failed to add event:', error);
+            this.errorMessage = 'Failed to add event.';
           });
     },
     checkInput(event) {

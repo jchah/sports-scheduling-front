@@ -84,7 +84,7 @@
         <div class="ml-3">
           <div class="input-group input-group mb-3">
             <input type="number" class="form-control" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
-            <button class="btn btn-outline-primary" type="button" @click="goToPage">Go</button>
+            <button class="btn dele" type="button" @click="goToPage">Go</button>
           </div>
         </div>
       </nav>
@@ -201,7 +201,7 @@ export default {
             this.updatePageOnFetch();
           })
           .catch(error => {
-            console.error('Error fetching events:', error);
+            console.error('Failed to fetch events:', error);
           });
     },
     updatePageOnFetch() {
@@ -219,7 +219,7 @@ export default {
               this.events = this.events.filter(event => event._id !== eventId);
             })
             .catch(error => {
-              console.error('Error deleting event:', error);
+              console.error('Failed to delete event:', error);
             });
       }
     },

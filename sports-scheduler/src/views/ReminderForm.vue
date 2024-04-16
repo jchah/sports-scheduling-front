@@ -29,6 +29,10 @@
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Set Reminder</button>
               </div>
+
+              <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
             </form>
           </div>
         </div>
@@ -49,7 +53,9 @@ export default {
         reminderDate: '',
         emailTo: '',
       },
-      events: []
+      events: [],
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
@@ -68,12 +74,14 @@ export default {
       try {
         const response = await axios.post('http://localhost:3000/schedule-email', emailData);
         if (response.status === 200) {
-          alert('Reminder email scheduled successfully!');
+          this.successMessage = 'Reminder email scheduled successfully!';
         } else {
           console.error('Failed to schedule reminder email:', response);
+          this.errorMessage = 'Failed to schedule reminder email.'
         }
       } catch (error) {
-        console.error('Error scheduling reminder email:', error);
+        console.error('Failed to schedule reminder email:', error);
+        this.errorMessage = 'Failed to schedule reminder email.'
       }
 
       this.reminder = {

@@ -52,6 +52,10 @@
             <input type="text" class="form-control" id="leagueTeams" v-model="teamNames" placeholder="Team A, Team B, Team C"
                    @input="checkInput" maxlength="300">
           </div>
+
+          <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+          <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
           <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-success">Add League</button>
             <BackButton />
@@ -81,6 +85,8 @@ export default {
       },
       teamNames: '',
       leagues: [],
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
@@ -95,20 +101,20 @@ export default {
 
       for (let i = 0; i < this.leagues.length; i++) {
         if (this.leagues[i].name === this.league.name) {
-          alert("Name " + this.league.name + " already exists!")
+          this.errorMessage = "Name " + this.league.name + " already exists!";
           return;
         }
       }
 
       axios.post('http://localhost:3000/leagues', payload)
           .then(response => {
-            alert('League added successfully');
+            this.successMessage = 'League added successfully';
             console.log('League added successfully:', response.data);
             this.clearForm();
           })
           .catch(error => {
-            console.error('Error adding league:', error);
-            alert('Failed to add league');
+            console.error('Failed to add league:', error);
+            this.errorMessage = 'Failed to add league';
           });
     },
     checkInput(event) {
@@ -135,7 +141,7 @@ export default {
             this.leagues = response.data;
           })
           .catch(error => {
-            console.error('Error fetching leagues:', error);
+            console.error('Failed to fetch leagues:', error);
           });
     }
   }

@@ -36,6 +36,10 @@
             </option>
           </select>
         </div>
+
+        <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
         <div class="d-flex justify-content-between">
           <button type="submit" :class="{'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Update Event</button>
           <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
@@ -67,7 +71,9 @@ export default {
         league: ''
       },
       leagues: [],
-      admin: false
+      admin: false,
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
@@ -75,6 +81,8 @@ export default {
       this.admin = localStorage.getItem('role') === 'admin';
     },
     submitForm() {
+      this.successMessage = '';
+      this.errorMessage = '';
       const eventData = {
         ...this.event,
         teams: this.event.teams.split(',').map(team => team.trim()) // Convert string to array
@@ -82,10 +90,11 @@ export default {
 
       axios.put(`http://localhost:3000/events/${this.$route.params.id}`, eventData)
           .then(() => {
-            alert('Event updated successfully');
+            this.successMessage = 'Event updated successfully';
           })
           .catch(error => {
             console.error('Error updating event:', error);
+            this.errorMessage = 'Error updating event.';
           });
     },
     checkInput(event) {
@@ -114,7 +123,7 @@ export default {
             };
           })
           .catch(error => {
-            console.error('Error fetching event details:', error);
+            console.error('Failed to fetch event details:', error);
           });
     },
     fetchLeagues() {
@@ -123,7 +132,7 @@ export default {
             this.leagues = response.data;
           })
           .catch(error => {
-            console.error('Error fetching leagues:', error);
+            console.error('Failed to fetch leagues:', error);
           });
     },
   },
