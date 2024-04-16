@@ -88,7 +88,7 @@ export default {
         teams: this.event.teams.split(',').map(team => team.trim()) // Convert string to array
       };
 
-      axios.put(`http://localhost:3000/events/${this.$route.params.id}`, eventData)
+      axios.put(`https://sports-scheduling-8lth.onrender.com/events/${this.$route.params.id}`, eventData)
           .then(() => {
             this.successMessage = 'Event updated successfully';
           })
@@ -112,7 +112,7 @@ export default {
       return date.toISOString().slice(0, 16);
     },
     fetchEventDetails() {
-      axios.get(`http://localhost:3000/events/${this.$route.params.id}`)
+      axios.get(`https://sports-scheduling-8lth.onrender.com/events/${this.$route.params.id}`)
           .then(response => {
             const eventData = response.data;
             this.event = {
@@ -127,7 +127,7 @@ export default {
           });
     },
     fetchLeagues() {
-      axios.get('http://localhost:3000/leagues')
+      axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })

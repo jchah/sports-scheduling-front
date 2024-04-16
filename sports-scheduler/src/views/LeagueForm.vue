@@ -106,7 +106,7 @@ export default {
         }
       }
 
-      axios.post('http://localhost:3000/leagues', payload)
+      axios.post('https://sports-scheduling-8lth.onrender.com/leagues', payload)
           .then(response => {
             this.successMessage = 'League added successfully';
             console.log('League added successfully:', response.data);
@@ -136,7 +136,7 @@ export default {
       this.teamNames = '';
     },
     fetchLeagues() {
-      return axios.get('http://localhost:3000/leagues')
+      return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })

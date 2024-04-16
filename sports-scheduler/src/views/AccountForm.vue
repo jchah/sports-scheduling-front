@@ -60,7 +60,7 @@ export default {
       this.successMessage = '';
       this.errorMessage = '';
       try {
-        const response = await fetch('http://localhost:3000/create-account', {
+        const response = await fetch('https://sports-scheduling-8lth.onrender.com/create-account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.account)

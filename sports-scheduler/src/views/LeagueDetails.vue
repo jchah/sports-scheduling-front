@@ -121,7 +121,7 @@ export default {
         const updatedEvent = { ...event, league: this.league.name };
 
         // Use PUT or PATCH if updating
-        return axios.put(`http://localhost:3000/events/${event._id}`, updatedEvent)
+        return axios.put(`https://sports-scheduling-8lth.onrender.com/events/${event._id}`, updatedEvent)
             .then(response => {
               console.log(`Updated event ${event._id}:`, response.data);
             })
@@ -150,7 +150,7 @@ export default {
           return;
         }
       }
-      await axios.put(`http://localhost:3000/leagues/${this.$route.params.id}`, leagueData)
+      await axios.put(`https://sports-scheduling-8lth.onrender.com/leagues/${this.$route.params.id}`, leagueData)
           .then(response => {
             this.successMessage = 'League updated successfully';
             console.log('League updated successfully:', response.data);
@@ -161,7 +161,7 @@ export default {
       await this.updateEventNames();
     },
     fetchLeagues() {
-      return axios.get('http://localhost:3000/leagues')
+      return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })
@@ -180,7 +180,7 @@ export default {
       }
     },
     async fetchLeagueDetails() {
-      axios.get(`http://localhost:3000/leagues/${this.$route.params.id}`)
+      axios.get(`https://sports-scheduling-8lth.onrender.com/leagues/${this.$route.params.id}`)
           .then(response => {
             this.league = response.data;
             this.fetchEvents();
@@ -190,7 +190,7 @@ export default {
           });
     },
     async fetchEvents() {
-      axios.get(`http://localhost:3000/events/`)
+      axios.get(`https://sports-scheduling-8lth.onrender.com/events/`)
           .then(response => {
             const events = response.data;
             console.log(response.data)

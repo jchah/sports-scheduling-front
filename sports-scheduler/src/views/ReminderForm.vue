@@ -72,7 +72,7 @@ export default {
       console.log('Sending email data to backend:', emailData);
 
       try {
-        const response = await axios.post('http://localhost:3000/schedule-email', emailData);
+        const response = await axios.post('https://sports-scheduling-8lth.onrender.com/schedule-email', emailData);
         if (response.status === 200) {
           this.successMessage = 'Reminder email scheduled successfully!';
         } else {
@@ -91,7 +91,7 @@ export default {
       };
     },
     async fetchEvents() {
-      await axios.get(`http://localhost:3000/events/`)
+      await axios.get(`https://sports-scheduling-8lth.onrender.com/events/`)
           .then(response => {
             this.events = response.data;
           })

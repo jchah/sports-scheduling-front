@@ -186,7 +186,7 @@ export default {
       this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
     },
     fetchLeagues() {
-      axios.get('http://localhost:3000/leagues')
+      axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
             this.updatePageOnFetch();
@@ -205,18 +205,18 @@ export default {
     },
     async deleteLeague(id, name) {
       if (confirm('Are you sure you want to delete this league?')) {
-        await axios.get('http://localhost:3000/events')
+        await axios.get('https://sports-scheduling-8lth.onrender.com/events')
             .then(response => {
               const allEvents = response.data;
               const eventsToUpdate = allEvents.filter(event => event.league === name);
               const updatePromises = eventsToUpdate.map(event => {
                 const updatedEvent = { ...event, league: '' };
-                return axios.put(`http://localhost:3000/events/${event._id}`, updatedEvent);
+                return axios.put(`https://sports-scheduling-8lth.onrender.com/events/${event._id}`, updatedEvent);
               });
               return Promise.all(updatePromises);
             })
             .then(() => {
-              return axios.delete(`http://localhost:3000/leagues/${id}`);
+              return axios.delete(`https://sports-scheduling-8lth.onrender.com/leagues/${id}`);
             })
             .then(() => {
               this.leagues = this.leagues.filter(league => league._id !== id);
