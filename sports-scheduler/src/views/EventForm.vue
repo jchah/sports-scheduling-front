@@ -44,7 +44,7 @@
           <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
           <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Update Event</button>
+            <button type="submit" class="btn btn-success">Add Event</button>
             <BackButton/>
           </div>
         </form>
