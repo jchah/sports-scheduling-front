@@ -7,8 +7,8 @@
       <div class="card-body">
         <form @submit.prevent="submitForm">
           <div class="mb-3">
-            <label for="eventTitle" class="form-label">Event Title (max 20 chars):</label>
-            <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="20" required>
+            <label for="eventTitle" class="form-label">Event Title (max 40 chars):</label>
+            <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="40" required>
           </div>
           <div class="mb-3">
             <label for="eventDescription" class="form-label">Description (max 300 chars):</label>
