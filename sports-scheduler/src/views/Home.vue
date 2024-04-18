@@ -13,6 +13,7 @@
         <div class="row">
           <div class="col-md-4 mb-4">
             <div class="card h-100 border-primary">
+              <img src="../../img/img3.jpg" class="card-img-top" alt="Upcoming Events">
               <div class="card-header bg-primary text-white">
                 View Upcoming Events
               </div>
@@ -23,21 +24,23 @@
           </div>
           <div class="col-md-4 mb-4">
             <div class="card h-100 border-info">
+              <img src="../../img/img1.jpg" class="card-img-top" alt="Manage Teams" style="width: 100%; height: 200px;">
               <div class="card-header bg-info text-white">
                 Manage Leagues and Teams
               </div>
               <div class="card-body">
-                <p class="card-text">Never miss an event with personalized reminders for your favorite sports events.</p>
+                <p class="card-text">Organize and manage leagues, teams, and their schedules efficiently.</p>
               </div>
             </div>
           </div>
           <div class="col-md-4 mb-4">
             <div class="card h-100 border-warning">
+              <img src="../../img/calendar.jpg" class="card-img-top" alt="Set Reminders" style="width: 100%; height: 200px;">
               <div class="card-header bg-warning text-dark">
                 Set Reminders
               </div>
               <div class="card-body">
-                <p class="card-text">Organize and manage leagues, teams, and their schedules efficiently.</p>
+                <p class="card-text">Never miss an event with personalized reminders for your favorite sports events.</p>
               </div>
             </div>
           </div>
@@ -47,8 +50,8 @@
     <div class="row mt-4">
       <div class="text-center">
         <h2 class="mb-4 text-danger">Quick Links:</h2>
-          <router-link to="/events/pg/1" class="btn btn-primary m-2 btn-lg">View Events</router-link>
-          <router-link to="/leagues/pg/2" class="btn btn-primary m-2 btn-lg">View Leagues</router-link>
+        <router-link to="/events/pg/1" class="btn btn-primary m-2 btn-lg">View Events</router-link>
+        <router-link to="/leagues/pg/2" class="btn btn-primary m-2 btn-lg">View Leagues</router-link>
       </div>
     </div>
   </div>
