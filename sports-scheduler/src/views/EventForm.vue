@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     fetchLeagues() {
-      axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
+      axios.get('https://sports-scheduling-f7o5.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })
@@ -96,7 +96,7 @@ export default {
         teams: this.event.teams.split(',').map(team => team.trim())
       };
 
-      axios.post('https://sports-scheduling-8lth.onrender.com/events', eventData)
+      axios.post('https://sports-scheduling-f7o5.onrender.com/events', eventData)
           .then(() => {
             this.successMessage = 'Event added successfully';
             this.clearForm();

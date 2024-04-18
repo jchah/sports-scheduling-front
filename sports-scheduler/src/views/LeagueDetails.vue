@@ -123,7 +123,7 @@ export default {
           return;
         }
       }
-      await axios.put(`https://sports-scheduling-8lth.onrender.com/leagues/${this.$route.params.id}`, leagueData)
+      await axios.put(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`, leagueData)
           .then(response => {
             this.successMessage = 'League updated successfully';
             console.log('League updated successfully:', response.data);
@@ -133,7 +133,7 @@ export default {
           });
     },
     fetchLeagues() {
-      return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
+      return axios.get('https://sports-scheduling-f7o5.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })
@@ -152,7 +152,7 @@ export default {
       }
     },
     async fetchLeagueDetails() {
-      axios.get(`https://sports-scheduling-8lth.onrender.com/leagues/${this.$route.params.id}`)
+      axios.get(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`)
           .then(response => {
             this.league = response.data;
             this.fetchEvents();
@@ -162,7 +162,7 @@ export default {
           });
     },
     async fetchEvents() {
-      axios.get(`https://sports-scheduling-8lth.onrender.com/events/`)
+      axios.get(`https://sports-scheduling-f7o5.onrender.com/events/`)
           .then(response => {
             const events = response.data;
             this.upcomingEvents = events.filter(event => event.league === this.league.name);

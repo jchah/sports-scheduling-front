@@ -202,7 +202,7 @@ export default {
       this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
     },
     fetchEvents() {
-      axios.get('https://sports-scheduling-8lth.onrender.com/events')
+      axios.get('https://sports-scheduling-f7o5.onrender.com/events')
           .then(response => {
             this.events = response.data.map(event => ({
               ...event,
@@ -224,7 +224,7 @@ export default {
     },
     deleteEvent(eventId) {
       if (confirm('Are you sure you want to delete this event?')) {
-        axios.delete(`https://sports-scheduling-8lth.onrender.com/events/${eventId}`)
+        axios.delete(`https://sports-scheduling-f7o5.onrender.com/events/${eventId}`)
             .then(() => {
               this.events = this.events.filter(event => event._id !== eventId);
             })

@@ -96,7 +96,7 @@ export default {
         }
       }
 
-      axios.post('https://sports-scheduling-8lth.onrender.com/leagues', payload)
+      axios.post('https://sports-scheduling-f7o5.onrender.com/leagues', payload)
           .then(response => {
             this.successMessage = 'League added successfully';
             console.log('League added successfully:', response.data);
@@ -121,7 +121,7 @@ export default {
       this.league = { name: '', sport: '', division: '' };
     },
     fetchLeagues() {
-      return axios.get('https://sports-scheduling-8lth.onrender.com/leagues')
+      return axios.get('https://sports-scheduling-f7o5.onrender.com/leagues')
           .then(response => {
             this.leagues = response.data;
           })
