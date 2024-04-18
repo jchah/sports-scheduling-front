@@ -7,8 +7,8 @@
       <div class="card-body">
         <form @submit.prevent="submitForm">
           <div class="mb-3">
-            <label for="eventTitle" class="form-label">Event Title (max 20 chars):</label>
-            <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="20" required>
+            <label for="eventTitle" class="form-label">Event Title (max 40 chars):</label>
+            <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="40" required>
           </div>
           <div class="mb-3">
             <label for="eventDescription" class="form-label">Description (max 300 chars):</label>
@@ -44,7 +44,7 @@
           <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
           <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Update Event</button>
+            <button type="submit" class="btn btn-success">Add Event</button>
             <BackButton/>
           </div>
         </form>

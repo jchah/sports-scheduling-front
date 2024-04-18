@@ -4,8 +4,8 @@
       <h2 class="text-center mb-4 bg-primary text-white p-2 rounded">{{ formTitle }}</h2>
       <form @submit.prevent="submitForm">
         <div class="form-group mb-3">
-          <label for="eventTitle" class="form-label">Event Title (max 50 chars):</label>
-          <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="50" required :disabled="!admin">
+          <label for="eventTitle" class="form-label">Event Title (max 40 chars):</label>
+          <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="40" required :disabled="!admin">
         </div>
         <div class="form-group mb-3">
           <label for="eventDescription" class="form-label">Description (max 300 chars):</label>
