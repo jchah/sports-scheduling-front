@@ -2,7 +2,7 @@
   <div class="reminder-form container mt-5">
     <div class="row">
       <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
-        <div class="card shadow">
+        <div class="card shadow border-dark">
           <div class="card-body">
             <h2 class="card-title text-center mb-4">Set Reminder for Event</h2>
             <form @submit.prevent="setReminder">

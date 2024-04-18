@@ -2,7 +2,7 @@
   <div class="container mt-4">
     <div class="row mb-3">
       <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select" v-model="sortKey" aria-label="Sort by">
+        <select class="form-select border-dark" v-model="sortKey" aria-label="Sort by">
           <option value="">Select Sort Option</option>
           <option value="date">Date</option>
           <option value="league">League</option>
@@ -10,29 +10,29 @@
         </select>
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select" v-model="sortOrder" aria-label="Order by">
+        <select class="form-select border-dark" v-model="sortOrder" aria-label="Order by">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
+        <input type="text" class="form-control border-dark" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
+        <input type="text" class="form-control border-dark" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control" v-model="filterByTeam" placeholder="Show Team A, Team B" aria-label="Filter by Team">
+        <input type="text" class="form-control border-dark" v-model="filterByTeam" placeholder="Show Team A, Team B" aria-label="Filter by Team">
       </div>
       <div class="col-lg-2 col-md-4 mb-2">
-        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Add Event</button>
+        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add Event</button>
       </div>
     </div>
 
-    <h2>Upcoming Events</h2>
+    <h2 class="text-center">Upcoming Events</h2>
     <div v-if="paginatedEvents.length">
       <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <thead class="table-light">
           <tr>
             <th scope="col">Event Title</th>
@@ -73,21 +73,21 @@
       <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
-            <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
+            <a class="page-link border-dark" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
           </li>
           <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
-            <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+            <a class="page-link border-dark" href="#" @click.prevent="changePage(page)">{{ page }}</a>
           </li>
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-            <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
+            <a class="page-link border-dark" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
           </li>
         </ul>
 
 
         <div class="ml-3">
           <div class="input-group input-group mb-3">
-            <input type="number" class="form-control" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
-            <button class="btn dele" type="button" @click="goToPage">Go</button>
+            <input type="number" class="form-control border-dark" v-model.number="jumpToPage" @keyup.enter="goToPage" placeholder="Page" min="1" :max="totalPages">
+            <button class="btn btn-primary" type="button" @click="goToPage">Go</button>
           </div>
         </div>
       </nav>
