@@ -3,12 +3,11 @@
     <div class="row mb-4">
       <div class="col-lg-8 mx-auto text-center">
         <h1 class="display-5 font-weight-bold text-primary">Welcome to Sportz Plannerrz!</h1>
-        <p class="lead text-secondary">This is your go-to app for managing and scheduling sports events.</p>
+        <p class="lead text-secondary mb-lg-5">This is your go-to app for managing and scheduling sports events.</p>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-12 ">
+        <div class="container">
         <div class="row">
           <div class="col-md-4 mb-4">
             <router-link to="events/pg/1" class="card h-100 border-primary text-decoration-none">
@@ -32,7 +31,7 @@
               </div>
             </router-link>
           </div>
-          <router-link to="reminder" class="col-md-4 mb-4">
+          <router-link to="reminder" class="col-md-4 mb-4 text-decoration-none">
             <div class="card h-100 border-warning">
               <img src="../img/calendar.jpg" class="card-img-top" alt="Set Reminders" style="width: 100%; height: 15.625rem;">
               <div class="card-header bg-warning text-dark">
@@ -45,8 +44,8 @@
           </router-link>
         </div>
       </div>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -54,3 +53,10 @@ export default {
   name: 'AppHome',
 }
 </script>
+
+<style>
+.container {
+  justify-content: center;
+  align-content: center;
+}
+</style>
