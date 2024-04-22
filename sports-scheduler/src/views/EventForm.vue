@@ -6,36 +6,68 @@
       </div>
       <div class="card-body">
         <form @submit.prevent="submitForm">
+
           <div class="mb-3">
-            <label for="eventTitle" class="form-label">Event Title (max 40 chars):</label>
-            <input type="text" class="form-control" id="eventTitle" v-model="event.title" @input="checkInput" maxlength="40" required>
+            <label for="eventTitle" class="form-label">Event Title:</label>
+            <input type="text" class="form-control" id="eventTitle" v-model="event.title" required maxlength="40">
           </div>
+
           <div class="mb-3">
-            <label for="eventDescription" class="form-label">Description (max 300 chars):</label>
-            <textarea class="form-control" id="eventDescription" v-model="event.description" @input="checkInput" maxlength="300" required></textarea>
+            <label for="eventDescription" class="form-label">Description:</label>
+            <textarea class="form-control" id="eventDescription" v-model="event.description" required maxlength="300"></textarea>
           </div>
+
           <div class="mb-3">
             <label for="eventStartTime" class="form-label">Start Time:</label>
             <input type="datetime-local" class="form-control" id="eventStartTime" v-model="event.startTime" required>
           </div>
+
           <div class="mb-3">
             <label for="eventEndTime" class="form-label">End Time:</label>
             <input type="datetime-local" class="form-control" id="eventEndTime" v-model="event.endTime" required>
           </div>
+
           <div class="mb-3">
-            <label for="eventLocation" class="form-label">Location (max 40 chars):</label>
-            <input type="text" class="form-control" id="eventLocation" v-model="event.location" @input="checkInput" maxlength="40" required>
+            <label for="eventLocation" class="form-label">Location:</label>
+            <input type="text" class="form-control" id="eventLocation" v-model="event.location" required maxlength="40">
           </div>
-          <div class="mb-3">
-            <label for="eventTeams" class="form-label">Teams (comma-separated, max 80 chars):</label>
-            <input type="text" class="form-control" id="eventTeams" v-model="event.teams" @input="checkInput" maxlength="80" required>
-          </div>
+
           <div class="mb-4">
             <label for="eventLeague" class="form-label">League:</label>
-            <select id="eventLeague" class="form-select" v-model="event.league">
+            <select id="eventLeague" class="form-select" v-model="event.league" @change="onLeagueChange">
               <option disabled value="">Select a League</option>
               <option v-for="league in leagues" :key="league._id" :value="league.name">
                 {{ league.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label for="firstTeam" class="form-label">First Team:</label>
+            <select
+                id="firstTeam"
+                class="form-select"
+                v-model="event.teams[0]"
+                :disabled="!event.league"
+            >
+              <option disabled value="">Select a Team</option>
+              <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+                {{ team.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label for="secondTeam" class="form-label">Second Team:</label>
+            <select
+                id="secondTeam"
+                class="form-select"
+                v-model="event.teams[1]"
+                :disabled="!event.league"
+            >
+              <option disabled value="">Select a Team</option>
+              <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+                {{ team.name }}
               </option>
             </select>
           </div>
@@ -59,7 +91,7 @@ import BackButton from '@/components/BackButton.vue';
 
 export default {
   name: 'EventForm',
-  components: {BackButton},
+  components: { BackButton },
   data() {
     return {
       formTitle: 'Add New Event',
@@ -69,16 +101,19 @@ export default {
         startTime: '',
         endTime: '',
         location: '',
-        teams: '',
-        league: ''
+        teams: [],
+        league: '',
       },
       leagues: [],
+      teams: [],
+      availableTeams: [],
       successMessage: '',
       errorMessage: ''
     };
   },
   created() {
     this.fetchLeagues();
+    this.fetchTeams();
   },
   methods: {
     fetchLeagues() {
@@ -90,11 +125,40 @@ export default {
             console.error('Failed to fetch leagues:', error);
           });
     },
+    fetchTeams() {
+      axios.get('https://sports-scheduling-f7o5.onrender.com/teams')
+          .then(response => {
+            this.teams = response.data;
+          })
+          .catch(error => {
+            console.error('Failed to fetch teams:', error);
+          });
+    },
+    onLeagueChange() {
+      console.log("LEAGUE CHANGE")
+      const selectedLeagueName = this.event.league;
+      if (selectedLeagueName) {
+        const selectedLeague = this.leagues.find(league => league.name === selectedLeagueName);
+
+        this.availableTeams = this.teams.filter(team => team.sport === selectedLeague.sport);
+      } else {
+        this.availableTeams = [];
+      }
+    },
     submitForm() {
+      const eventTeams = this.event.teams.map(team => (typeof team === 'object' ? team.name : team));
+
       const eventData = {
-        ...this.event,
-        teams: this.event.teams.split(',').map(team => team.trim())
+        title: this.event.title,
+        location: this.event.location,
+        description: this.event.description,
+        startTime: this.event.startTime,
+        endTime: this.event.endTime,
+        league: this.event.league,
+        teams: eventTeams,
       };
+
+      console.log(eventData);
 
       axios.post('https://sports-scheduling-f7o5.onrender.com/events', eventData)
           .then(() => {
@@ -106,16 +170,6 @@ export default {
             this.errorMessage = 'Failed to add event.';
           });
     },
-    checkInput(event) {
-      const originalText = event.target.value;
-      const regex = /[^a-zA-Z0-9\s.,?!@$&]/g;
-      const filteredText = originalText.replace(regex, '');
-      event.target.value = filteredText;
-
-      if (originalText !== filteredText) {
-        this.event[event.target.id.slice(5).toLowerCase()] = filteredText;
-      }
-    },
     clearForm() {
       this.event = {
         title: '',
@@ -123,10 +177,11 @@ export default {
         startTime: '',
         endTime: '',
         location: '',
-        teams: '',
-        league: ''
+        teams: [],
+        league: '',
       };
-    }
-  }
-}
+      this.availableTeams = [];
+    },
+  },
+};
 </script>

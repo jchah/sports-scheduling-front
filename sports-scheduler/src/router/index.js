@@ -10,6 +10,9 @@ import LoginForm from "@/views/LoginForm.vue";
 import LeagueDetails from "@/views/LeagueDetails.vue";
 import ReminderForm from "@/views/ReminderForm.vue";
 import AccountForm from '@/views/AccountForm.vue';
+import TeamsList from "@/views/TeamsList.vue";
+import TeamForm from "@/views/TeamForm.vue";
+import TeamDetails from "@/views/TeamDetails.vue";
 
 const routes = [
   {
@@ -79,6 +82,30 @@ const routes = [
     path: '/create-account',
     name: 'AccountForm',
     component: AccountForm
+  },
+  {
+    path: '/teams/pg/:page',
+    name: 'TeamsList',
+    component: TeamsList
+  },
+  {
+    path: '/teams/new',
+    name: 'NewTeam',
+    component: TeamForm,
+    beforeEnter: (to, from, next) => {
+      if (!(localStorage.getItem('role') === 'admin')) {
+        alert('You do not have permission to add new events.');
+        next(false);
+      } else {
+        next();
+      }
+    }
+  },
+  {
+    path: '/teams/:id',
+    name: 'TeamDetails',
+    component: TeamDetails,
+    props: true
   },
 ];
 

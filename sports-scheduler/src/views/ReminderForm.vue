@@ -4,7 +4,7 @@
       <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         <div class="card shadow border-dark">
           <div class="card-body">
-            <h2 class="card-title text-center mb-4">Set Reminder for Event</h2>
+            <h2 class="card-title text-center display-6 fw-bold fst-italic">Set Reminder for Event</h2>
             <form @submit.prevent="setReminder">
               <div class="mb-3">
                 <label for="eventSelect" class="form-label">Select Event:</label>

@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand" exact-active-class="active">Sports Scheduler</router-link>
+      <router-link to="/" class="navbar-brand" exact-active-class="active">
+        <i class="fas fa-football-ball fa-lg"></i> Sports Scheduler
+      </router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -15,6 +17,9 @@
           </li>
           <li class="nav-item">
             <router-link to="/leagues/pg/1" class="nav-link" exact-active-class="active">Leagues</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/teams/pg/1" class="nav-link" exact-active-class="active">Teams</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/reminder" class="nav-link" exact-active-class="active">Reminders</router-link>
@@ -53,9 +58,6 @@ export default {
   },
   created() {
     EventBus.$on('auth-change', this.updateAuthStatus);
-  },
-  unmounted() {
-    EventBus.$off('auth-change', this.updateAuthStatus);
   },
   methods: {
     updateAuthStatus() {

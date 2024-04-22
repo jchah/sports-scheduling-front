@@ -1,54 +1,56 @@
 <template>
   <div class="container mt-4">
-    <div class="row mb-3">
-      <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select border-dark" v-model="sortKey" aria-label="Sort by">
-          <option value="">Select Sort Option</option>
-          <option value="alphabetical">Alphabetical</option>
-          <option value="division">Division</option>
-        </select>
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select border-dark" v-model="sortOrder" aria-label="Order by">
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </div>
-      <div class="col-lg-3 col-md-4 mb-2">
-        <select class="form-select border-dark" v-model="filterBySport" aria-label="Filter by Sport">
-          <option value="">Select Sport</option>
-          <option value="American Football">American Football</option>
-          <option value="Badminton">Badminton</option>
-          <option value="Baseball">Baseball</option>
-          <option value="Basketball">Basketball</option>
-          <option value="Bowling">Bowling</option>
-          <option value="Boxing">Boxing</option>
-          <option value="Chess">Chess</option>
-          <option value="Cricket">Cricket</option>
-          <option value="Cycling">Cycling</option>
-          <option value="Equestrian">Equestrian</option>
-          <option value="Golf">Golf</option>
-          <option value="Gymnastics">Gymnastics</option>
-          <option value="Hockey">Hockey</option>
-          <option value="Martial Arts">Martial Arts</option>
-          <option value="Rugby">Rugby</option>
-          <option value="Soccer">Soccer</option>
-          <option value="Swimming">Swimming</option>
-          <option value="Table Tennis">Table Tennis</option>
-          <option value="Tennis">Tennis</option>
-          <option value="Track and Field">Track and Field</option>
-          <option value="Volleyball">Volleyball</option>
-        </select>
-      </div>
-      <div class="col-lg-3 col-md-4 mb-2">
-        <input type="text" class="form-control border-dark" v-model="filterByName" placeholder="Filter by League Name" aria-label="Filter by League Name">
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add League</button>
+    <h2 class="text-center display-4 fw-bold fst-italic">Leagues</h2>
+    <div class="card p-3 mt-4">
+      <div class="row">
+        <div class="col-lg-2 col-md-4 mb-2">
+          <select class="form-select border-dark" v-model="sortKey" aria-label="Sort by">
+            <option value="">Select Sort Option</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="division">Division</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <select class="form-select border-dark" v-model="sortOrder" aria-label="Order by">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 mb-2">
+          <select class="form-select border-dark" v-model="filterBySport" aria-label="Filter by Sport">
+            <option value="">Select Sport</option>
+            <option value="American Football">American Football</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Baseball">Baseball</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Bowling">Bowling</option>
+            <option value="Boxing">Boxing</option>
+            <option value="Chess">Chess</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Equestrian">Equestrian</option>
+            <option value="Golf">Golf</option>
+            <option value="Gymnastics">Gymnastics</option>
+            <option value="Hockey">Hockey</option>
+            <option value="Martial Arts">Martial Arts</option>
+            <option value="Rugby">Rugby</option>
+            <option value="Soccer">Soccer</option>
+            <option value="Swimming">Swimming</option>
+            <option value="Table Tennis">Table Tennis</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Track and Field">Track and Field</option>
+            <option value="Volleyball">Volleyball</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4 mb-2">
+          <input type="text" class="form-control border-dark" v-model="filterByName" placeholder="Filter by League Name" aria-label="Filter by League Name" @change="updateQueryParams">
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add League</button>
+        </div>
       </div>
     </div>
 
-    <h2 class="text-center">Leagues</h2>
     <div v-if="paginatedLeagues.length">
       <div class="table-responsive">
         <table class="table table-striped table-bordered">
@@ -63,10 +65,10 @@
           <tr v-for="league in paginatedLeagues" :key="league._id">
             <td>{{ league.name }}</td>
             <td>{{ league.division }}</td>
-            <td>
+            <td class="text-center align-middle">
               <div class="btn-group btn-group-sm" role="group" aria-label="League Actions">
-                <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View</button>
-                <button @click="deleteLeague(league._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
+                <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View Details</button>
+                <button @click="deleteLeague(league._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete League</button>
               </div>
             </td>
           </tr>
@@ -112,8 +114,8 @@ export default {
       leaguesPerPage: 8,
       sortKey: this.$route.query.sortKey || '',
       sortOrder: this.$route.query.sortOrder || 'asc',
-      filterByName: '',
-      filterBySport: '',
+      filterBySport: this.$route.query.filterBySport || '',
+      filterByName: this.$route.query.filterByName || '',
       admin: false
     };
   },
@@ -127,15 +129,20 @@ export default {
         }
       }
     },
-    sortKey(newVal) {
-      this.updateSortQuery(newVal, this.sortOrder);
-    },
-    sortOrder(newVal) {
-      this.updateSortQuery(this.sortKey, newVal);
-    },
     filterByName() {
       this.currentPage = 1;
-    }
+      this.updateQueryParams();
+    },
+    filterBySport() {
+      this.currentPage = 1;
+      this.updateQueryParams();
+    },
+    sortKey() {
+      this.updateQueryParams();
+    },
+    sortOrder() {
+      this.updateQueryParams();
+    },
   },
   computed: {
     sortedLeagues() {
@@ -182,8 +189,16 @@ export default {
         this.jumpToPage = null;
       }
     },
-    updateSortQuery(sortKey, sortOrder) {
-      this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
+    updateQueryParams() {
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          sortKey: this.sortKey,
+          sortOrder: this.sortOrder,
+          filterBySport: this.filterBySport,
+          filterByName: this.filterByName,
+        },
+      });
     },
     fetchLeagues() {
       axios.get('https://sports-scheduling-f7o5.onrender.com/leagues')

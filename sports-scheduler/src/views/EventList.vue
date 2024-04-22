@@ -1,35 +1,36 @@
 <template>
   <div class="container mt-4">
-    <div class="row mb-3">
-      <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select border-dark" v-model="sortKey" aria-label="Sort by">
-          <option value="">Select Sort Option</option>
-          <option value="date">Date</option>
-          <option value="league">League</option>
-          <option value="alphabet">Alphabetical</option>
-        </select>
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <select class="form-select border-dark" v-model="sortOrder" aria-label="Order by">
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control border-dark" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control border-dark" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <input type="text" class="form-control border-dark" v-model="filterByTeam" placeholder="Show Team A, Team B" aria-label="Filter by Team">
-      </div>
-      <div class="col-lg-2 col-md-4 mb-2">
-        <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add Event</button>
+    <h2 class="text-center display-4 fw-bold fst-italic">Upcoming Events</h2>
+    <div class="card p-3 mt-4">
+      <div class="row">
+        <div class="col-lg-2 col-md-4 mb-2">
+          <select class="form-select border-dark" v-model="sortKey" aria-label="Sort by">
+            <option value="">Select Sort Option</option>
+            <option value="date">Date</option>
+            <option value="league">League</option>
+            <option value="alphabet">Alphabetical</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <select class="form-select border-dark" v-model="sortOrder" aria-label="Order by">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <input type="text" class="form-control border-dark" v-model="filterByLeague" placeholder="Filter by League" aria-label="Filter by League">
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <input type="text" class="form-control border-dark" v-model="filterByTitle" placeholder="Filter by Title" aria-label="Filter by Title">
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <input type="text" class="form-control border-dark" v-model="filterByTeam" placeholder="Show Team A, Team B" aria-label="Filter by Team">
+        </div>
+        <div class="col-lg-2 col-md-4 mb-2">
+          <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add Event</button>
+        </div>
       </div>
     </div>
-
-    <h2 class="text-center">Upcoming Events</h2>
     <div v-if="paginatedEvents.length">
       <div class="table-responsive">
         <table class="table table-striped table-bordered">
@@ -60,10 +61,10 @@
                 </iframe>
               </div>
             </td>
-            <td>
+            <td class="text-center align-middle">
               <div class="btn-group btn-group-sm" role="group" aria-label="Event Actions">
-                <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View</button>
-                <button @click="deleteEvent(event._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete</button>
+                <button @click="viewDetails(event._id)" class="btn btn-primary btn-sm">View Details</button>
+                <button @click="deleteEvent(event._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete Event</button>
               </div>
             </td>
           </tr>
@@ -112,9 +113,9 @@ export default {
       eventsPerPage: 8,
       sortKey: this.$route.query.sortKey || '',
       sortOrder: this.$route.query.sortOrder || 'asc',
-      filterByLeague: '',
-      filterByTitle: '',
-      filterByTeam: '',
+      filterByLeague: this.$route.query.filterByLeague || '',
+      filterByTitle: this.$route.query.filterByTitle || '',
+      filterByTeam: this.$route.query.filterByTeam || '',
       apiKey: 'AIzaSyC1J8rbjY3B-Y-dzoWU7jl6hAW4jAh-yRk',
       admin: false
     };
@@ -129,29 +130,32 @@ export default {
         }
       }
     },
-    sortKey(newVal) {
-      this.updateSortQuery(newVal, this.sortOrder);
-    },
-    sortOrder(newVal) {
-      this.updateSortQuery(this.sortKey, newVal);
-    },
     filterByLeague() {
       this.currentPage = 1;
+      this.updateQueryParams();
     },
     filterByTitle() {
       this.currentPage = 1;
+      this.updateQueryParams();
     },
     filterByTeam() {
       this.currentPage = 1;
-    }
+      this.updateQueryParams();
+    },
+    sortKey() {
+      this.updateQueryParams();
+    },
+    sortOrder() {
+      this.updateQueryParams();
+    },
   },
   computed: {
     sortedEvents() {
       return this.events
           .filter(event => !this.filterByTitle || event.title.toLowerCase().includes(this.filterByTitle.toLowerCase()))
-          .filter(event => !this.filterByLeague || event.league === this.filterByLeague)
+          .filter(event => !this.filterByLeague || event.league.toLowerCase().includes(this.filterByLeague.toLowerCase()))
           .filter(event => {
-            if (!this.filterByTeam) return true;  // Skip filtering if no team input
+            if (!this.filterByTeam) return true;
             const inputTeams = this.filterByTeam.split(',').map(team => team.trim().toLowerCase());
             return inputTeams.every(inputTeam =>
                 event.teams.some(team => team.toLowerCase().includes(inputTeam))
@@ -188,6 +192,17 @@ export default {
     this.fetchEvents();
   },
   methods: {
+    updateQueryParams() {
+      this.$router.push({
+        query: {
+          sortKey: this.sortKey,
+          sortOrder: this.sortOrder,
+          filterByLeague: this.filterByLeague,
+          filterByTitle: this.filterByTitle,
+          filterByTeam: this.filterByTeam,
+        },
+      });
+    },
     checkPermissions() {
       this.admin = localStorage.getItem('role') === 'admin';
     },
@@ -197,9 +212,6 @@ export default {
         this.changePage(pageNumber);
         this.jumpToPage = null;
       }
-    },
-    updateSortQuery(sortKey, sortOrder) {
-      this.$router.push({ query: { ...this.$route.query, sortKey, sortOrder } });
     },
     fetchEvents() {
       axios.get('https://sports-scheduling-f7o5.onrender.com/events')

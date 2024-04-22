@@ -4,7 +4,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
-            <h2 class="text-center">Login</h2>
+            <h2 class="text-center">Login to continue</h2>
           </div>
           <div class="card-body">
             <form @submit.prevent="login">

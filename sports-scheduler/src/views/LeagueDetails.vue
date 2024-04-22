@@ -6,6 +6,11 @@
           <div class="card-header bg-primary text-white">
             <h2>{{ formTitle }}</h2>
           </div>
+          <div v-if="loading" class="d-flex justify-content-center align-items-center my-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
           <div class="card-body">
             <form @submit.prevent="submitForm">
               <div class="mb-3">
@@ -103,7 +108,8 @@ export default {
       leagues: [],
       admin: false,
       successMessage: '',
-      errorMessage: ''
+      errorMessage: '',
+      loading: false
     };
   },
 
@@ -113,33 +119,37 @@ export default {
     },
 
     async submitForm() {
+      this.loading = true;
       await this.fetchLeagues();
       const leagueData = {
-        ...this.league
+        ...this.league,
       };
+
       for (let i = 0; i < this.leagues.length; i++) {
-        if(this.leagues[i].name === this.league.name) {
-          this.errorMessage = "Name " + this.league.name + " already exists!";
+        if (this.leagues[i].name === this.league.name) {
+          this.errorMessage = 'Name ' + this.league.name + ' already exists!';
+          this.loading = false;
           return;
         }
       }
-      await axios.put(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`, leagueData)
-          .then(response => {
-            this.successMessage = 'League updated successfully';
-            console.log('League updated successfully:', response.data);
-          })
-          .catch(error => {
-            console.error('Failed to update league:', error);
-          });
+
+      try {
+        await axios.put(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`, leagueData);
+        this.successMessage = 'League updated successfully';
+      } catch (error) {
+        console.error('Failed to update league:', error);
+        this.errorMessage = 'Failed to update league';
+      } finally {
+        this.loading = false;
+      }
     },
-    fetchLeagues() {
-      return axios.get('https://sports-scheduling-f7o5.onrender.com/leagues')
-          .then(response => {
-            this.leagues = response.data;
-          })
-          .catch(error => {
-            console.error('Failed to fetch leagues:', error);
-          });
+    async fetchLeagues() {
+      try {
+        const response = await axios.get('https://sports-scheduling-f7o5.onrender.com/leagues');
+        this.leagues = response.data;
+      } catch (error) {
+        console.error('Failed to fetch leagues:', error);
+      }
     },
     checkInput(event) {
       const originalText = event.target.value;
@@ -152,26 +162,26 @@ export default {
       }
     },
     async fetchLeagueDetails() {
-      axios.get(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`)
-          .then(response => {
-            this.league = response.data;
-            this.fetchEvents();
-          })
-          .catch(error => {
-            console.error('Failed to fetch league details:', error);
-          });
+      this.loading = true;
+      try {
+        const response = await axios.get(`https://sports-scheduling-f7o5.onrender.com/leagues/${this.$route.params.id}`);
+        this.league = response.data;
+        await this.fetchEvents();
+      } catch (error) {
+        console.error('Failed to fetch league details:', error);
+      } finally {
+        this.loading = false;
+      }
     },
     async fetchEvents() {
-      axios.get(`https://sports-scheduling-f7o5.onrender.com/events/`)
-          .then(response => {
-            const events = response.data;
-            this.upcomingEvents = events.filter(event => event.league === this.league.name);
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error('Failed to fetch events:', error);
-          });
-    }
+      try {
+        const response = await axios.get(`https://sports-scheduling-f7o5.onrender.com/events`);
+        const events = response.data;
+        this.upcomingEvents = events.filter((event) => event.league === this.league.name);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      }
+    },
   },
   created() {
     this.checkPermissions();
