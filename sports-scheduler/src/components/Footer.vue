@@ -1,7 +1,7 @@
 <template>
-  <footer className="site-footer bg-dark text-white py-4">
-    <div className="container">
-      <p className="mb-0">&copy; {{ currentYear }} Sportz Plannerrz. All rights reserved.</p>
+  <footer class="site-footer bg-dark text-white py-3">
+    <div class="container">
+      <p class="mb-0">&copy; {{ currentYear }} Sportz Plannerrz. All rights reserved.</p>
     </div>
   </footer>
 </template>
