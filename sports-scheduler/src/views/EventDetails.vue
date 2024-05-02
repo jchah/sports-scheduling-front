@@ -46,9 +46,9 @@
 
         <div class="form-group mb-4">
           <label for="firstTeam" class="form-label">Team 1:</label>
-          <select id="firstTeam" class="form-select" v-model="event.teams[0]" :disabled="!admin || !event.league">
+          <select id="firstTeam" class="form-select" v-model="event.teams[0]._id" :disabled="!admin || !event.league">
             <option disabled value="">Select a Team</option>
-            <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+            <option v-for="team in availableTeams" :key="team._id" :value="team._id">
               {{ team.name }}
             </option>
           </select>
@@ -56,9 +56,9 @@
 
         <div class="form-group mb-4">
           <label class="form-label">Team 2:</label>
-          <select class="form-select" v-model="event.teams[1]" id="secondTeam" :disabled="!admin || !event.league">
+          <select class="form-select" v-model="event.teams[1]._id" id="secondTeam" :disabled="!admin || !event.league">
             <option disabled value="">Select a Team</option>
-            <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+            <option v-for="team in availableTeams" :key="team._id" :value="team._id">
               {{ team.name }}
             </option>
           </select>
@@ -121,7 +121,7 @@ export default {
         startTime: this.event.startTime,
         endTime: this.event.endTime,
         league: this.event.league,
-        teams: this.event.teams,
+        teams: this.event.teams.map(team => team._id),
       };
 
       try {
