@@ -68,7 +68,9 @@
         <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
         <div class="d-flex justify-content-between">
-          <button type="submit" class="btn btn-success" :disabled="!admin">Update Event</button>
+          <div v-if="admin">
+          <button type="submit" class="btn btn-success">Update Event</button>
+          </div>
           <button @click="this.$router.push(`/events/pg/${this.currentPage}`)" class="btn btn-secondary">
             ← Go back
           </button>

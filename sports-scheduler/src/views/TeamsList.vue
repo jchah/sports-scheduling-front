@@ -47,8 +47,8 @@
         <div class="col-lg-2 col-md-4 mb-2">
           <input type="text" class="form-control border-dark" v-model="filterByPlayer" placeholder="Show Player A, Player B" aria-label="Filter by Team Name">
         </div>
-        <div class="col-lg-2 col-md-4 mb-2">
-          <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add Team</button>
+        <div class="col-lg-2 col-md-4 mb-2" v-if="admin">
+          <button @click="openForm()" :class="{ 'btn-success': admin}" class="btn border-dark">Add Team</button>
         </div>
       </div>
       </div>
@@ -68,7 +68,9 @@
               <td class="text-center align-middle">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Team Actions">
                   <button @click="viewTeamDetails(team._id)" class="btn btn-primary btn-sm">View Details</button>
-                  <button @click="deleteTeam(team._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete Team</button>
+                  <div v-if="admin">
+                    <button @click="deleteTeam(team._id)" class="btn btn-danger btn-sm">Delete Team</button>
+                  </div>
                 </div>
               </td>
             </tr>

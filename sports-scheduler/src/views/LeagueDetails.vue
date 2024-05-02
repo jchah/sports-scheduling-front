@@ -59,7 +59,9 @@
               <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
               <div class="d-flex justify-content-between">
-                <button type="submit" :class="{'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn">Update League</button>
+                <div v-if="admin">
+                  <button type="submit" :class="{'btn-success': admin}" class="btn">Update League</button>
+                </div>
                 <button @click="this.$router.push('pg/' + this.currentPage)" class="btn btn-secondary">
                   ← Go back
                 </button>
