@@ -113,18 +113,18 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
-
-// Navigation Guard
-router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/create-account'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('authToken');
-
-  if (authRequired && !loggedIn) {
-    next('/login');
-  } else {
-    next();
-  }
-});
+//
+// // Navigation Guard
+// router.beforeEach((to, from, next) => {
+//   const publicPages = ['/login', '/create-account'];
+//   const authRequired = !publicPages.includes(to.path);
+//   const loggedIn = localStorage.getItem('authToken');
+//
+//   if (authRequired && !loggedIn) {
+//     next('/login');
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
