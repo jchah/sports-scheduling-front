@@ -51,7 +51,7 @@
                 :disabled="!event.league"
             >
               <option disabled value="">Select a Team</option>
-              <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+              <option v-for="team in availableTeams" :key="team._id" :value="team._id">
                 {{ team.name }}
               </option>
             </select>
@@ -66,7 +66,7 @@
                 :disabled="!event.league"
             >
               <option disabled value="">Select a Team</option>
-              <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+              <option v-for="team in availableTeams" :key="team._id" :value="team._id">
                 {{ team.name }}
               </option>
             </select>
@@ -146,8 +146,6 @@ export default {
       }
     },
     submitForm() {
-      const eventTeams = this.event.teams.map(team => (typeof team === 'object' ? team.name : team));
-
       const eventData = {
         title: this.event.title,
         location: this.event.location,
@@ -155,7 +153,7 @@ export default {
         startTime: this.event.startTime,
         endTime: this.event.endTime,
         league: this.event.league,
-        teams: eventTeams,
+        teams: this.event.teams,
       };
 
       console.log(eventData);

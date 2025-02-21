@@ -45,8 +45,8 @@
         <div class="col-lg-3 col-md-4 mb-2">
           <input type="text" class="form-control border-dark" v-model="filterByName" placeholder="Filter by League Name" aria-label="Filter by League Name" @change="updateQueryParams">
         </div>
-        <div class="col-lg-2 col-md-4 mb-2">
-          <button @click="openForm()" :class="{ 'btn-success': admin, 'btn-secondary': !admin }" :disabled="!admin" class="btn border-dark">Add League</button>
+        <div class="col-lg-2 col-md-4 mb-2" v-if="admin">
+          <button @click="openForm()" :class="{ 'btn-success': admin }" class="btn border-dark">Add League</button>
         </div>
       </div>
     </div>
@@ -68,7 +68,9 @@
             <td class="text-center align-middle">
               <div class="btn-group btn-group-sm" role="group" aria-label="League Actions">
                 <button @click="viewLeagueDetails(league._id)" class="btn btn-primary btn-sm">View Details</button>
-                <button @click="deleteLeague(league._id)" :disabled="!admin" class="btn btn-danger btn-sm">Delete League</button>
+                <div v-if="admin">
+                  <button @click="deleteLeague(league._id)" class="btn btn-danger btn-sm">Delete League</button>
+                </div>
               </div>
             </td>
           </tr>

@@ -46,9 +46,9 @@
 
         <div class="form-group mb-4">
           <label for="firstTeam" class="form-label">Team 1:</label>
-          <select id="firstTeam" class="form-select" v-model="event.teams[0]" :disabled="!admin || !event.league">
+          <select id="firstTeam" class="form-select" v-model="team1" :disabled="!admin || !event.league">
             <option disabled value="">Select a Team</option>
-            <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+            <option v-for="team in availableTeams" :key="team._id" :value="team._id">
               {{ team.name }}
             </option>
           </select>
@@ -56,9 +56,9 @@
 
         <div class="form-group mb-4">
           <label class="form-label">Team 2:</label>
-          <select class="form-select" v-model="event.teams[1]" id="secondTeam" :disabled="!admin || !event.league">
+          <select class="form-select" v-model="team2" id="secondTeam" :disabled="!admin || !event.league">
             <option disabled value="">Select a Team</option>
-            <option v-for="team in availableTeams" :key="team._id" :value="team.name">
+            <option v-for="team in availableTeams" :key="team._id" :value="team._id">
               {{ team.name }}
             </option>
           </select>
@@ -68,7 +68,9 @@
         <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
         <div class="d-flex justify-content-between">
-          <button type="submit" class="btn btn-success" :disabled="!admin">Update Event</button>
+          <div v-if="admin">
+          <button type="submit" class="btn btn-success">Update Event</button>
+          </div>
           <button @click="this.$router.push(`/events/pg/${this.currentPage}`)" class="btn btn-secondary">
             ← Go back
           </button>
@@ -104,6 +106,8 @@ export default {
       successMessage: '',
       errorMessage: '',
       availableTeams: [],
+      team1: '',
+      team2: ''
     };
   },
   methods: {
@@ -112,6 +116,7 @@ export default {
     },
 
     async submitForm() {
+      const teamsArr = [this.team1, this.team2]
       const eventData = {
         title: this.event.title,
         description: this.event.description,
@@ -119,7 +124,7 @@ export default {
         startTime: this.event.startTime,
         endTime: this.event.endTime,
         league: this.event.league,
-        teams: this.event.teams,
+        teams: teamsArr
       };
 
       try {
@@ -165,7 +170,10 @@ export default {
           endTime: this.formatDateTimeLocal(eventData.endTime),
           teams: eventData.teams || [],
           league: eventData.league,
-        };
+        }
+
+        this.team1 = this.event.teams[0]
+        this.team2 = this.event.teams[1]
 
         await this.updateAvailableTeams();
       } catch (error) {

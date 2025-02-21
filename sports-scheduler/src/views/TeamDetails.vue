@@ -48,7 +48,9 @@
         <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
         <div class="d-flex justify-content-between">
-          <button @click="updateTeam" :class="{'btn-success': admin, 'btn-secondary': !admin}" :disabled="!admin" class="btn">Update Team</button>
+          <div v-if="admin">
+            <button @click="updateTeam" :class="{'btn-success': admin}" class="btn">Update Team</button>
+          </div>
           <button @click="goBack" class="btn btn-secondary">← Go back</button>
         </div>
       </div>
